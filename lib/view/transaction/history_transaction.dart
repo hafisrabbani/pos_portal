@@ -71,12 +71,16 @@ class _HistoryTransactionState extends State<HistoryTransaction> {
                             '#${transactionDetail?.transaction.id.toString()}')),
                     rowItem(
                         'Tanggal',
-                        commonText(convertDate(
-                            transactionDetail?.transaction.CreatedTime ?? ''))),
+                        commonText(convertDate(transactionDetail
+                                ?.transaction.CreatedTime
+                                .toString() ??
+                            ''))),
                     rowItem(
                         'Jam',
-                        commonText(convertTime(
-                            transactionDetail?.transaction.CreatedTime ?? ''))),
+                        commonText(convertTime(transactionDetail
+                                ?.transaction.CreatedTime
+                                .toString() ??
+                            ''))),
                     rowItem(
                         'Total',
                         commonText(
@@ -137,8 +141,7 @@ class _HistoryTransactionState extends State<HistoryTransaction> {
                         transactionDetail!.transaction,
                         transactionDetail!.items,
                       );
-                    }
-                )
+                    })
               ],
             ),
           ),

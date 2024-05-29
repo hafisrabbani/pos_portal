@@ -21,7 +21,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   List<int> _infoProduct = [];
   @override
   void initState() {
@@ -33,30 +32,22 @@ class _HomePageState extends State<HomePage> {
     // _infoProduct = await _productController.getInfoProduct();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body:SafeArea(
+        body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CardWallet(),
                 CardInfo(),
-                CardMenu(infoProduct: [1,1,1]),
+                CardMenu(infoProduct: [1, 1, 1]),
                 SegmentedControl(),
                 GestureDetector(
-                  onTap: () {
-                    // PersistentNavBarNavigator.pushNewScreen(
-                    //   context,
-                    //   screen: StatsPage(),
-                    //   withNavBar: true,
-                    //   pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                    // );
-                  },
-                  child: LineChart(),
+                  onTap: () {},
+                  child: LineChartWidget(),
                 ),
               ],
             ),
@@ -65,15 +56,8 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingButtonDefault(
           heroTag: "home",
           title: 'Tambah Transaksi',
-          // actionPressed: () => PersistentNavBarNavigator.pushNewScreen(
-          //   context,
-          //   screen: NewTransactionPage(),
-          //   withNavBar: false,
-          //   pageTransitionAnimation: PageTransitionAnimation.cupertino,
-          // ),
-          actionPressed: () => {
-            Navigator.pushNamed(context, RoutesName.newTransaction)
-          },
+          actionPressed: () =>
+              {Navigator.pushNamed(context, RoutesName.newTransaction)},
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),

@@ -10,7 +10,6 @@ import 'package:pos_portal/routes/route_name.dart';
 import 'package:pos_portal/utils/colors.dart';
 import 'package:pos_portal/utils/helpers.dart';
 import 'package:pos_portal/view_model/transaction_view_model.dart';
-import 'package:pos_portal/widgets/card_total_transaksi.dart';
 import 'package:pos_portal/widgets/table_row_widget.dart';
 import 'package:pos_portal/widgets/topbar.dart';
 
@@ -26,10 +25,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute
-        .of(context)!
-        .settings
-        .arguments as Map;
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
     final totalTransaksi = args['totalTransaksi'];
     final selectedItems = args['selectedItems'].toList();
     return Scaffold(
@@ -91,10 +87,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                               tableRowItem(title: 'Harga', isHeader: true),
                             ],
                           ),
-                          ...selectedItems
-                              .asMap()
-                              .entries
-                              .map((entry) {
+                          ...selectedItems.asMap().entries.map((entry) {
                             int index = entry.key;
                             var item = entry.value;
                             return TableRow(
@@ -132,7 +125,6 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
     );
   }
 
-
   GestureDetector CashOrQris({
     required String title,
     required int idTransaksi,
@@ -151,22 +143,19 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                 paymentMethod: PaymentMethodType.QRIS,
               ),
               selectedItems
-                  .map<TransactionItem>(
-                      (e) => TransactionItem(
-                    ProductId: e['productId'],
-                    Quantity: e['quantity'],
-                    Price: e['price'].toInt(),
-                  ))
-                  .toList()
-          );
+                  .map<TransactionItem>((e) => TransactionItem(
+                        ProductId: e['productId'],
+                        Quantity: e['quantity'],
+                        Price: e['price'].toInt(),
+                      ))
+                  .toList());
 
-          RespPayment respPayment = await transactionViewModel.createPaymentQris(
-            RequestTransaction(
-                orderId: trxId!,
-                expiredMintute: 5,
-                amount: totalTransaksi,
-            )
-          );
+          RespPayment respPayment =
+              await transactionViewModel.createPaymentQris(RequestTransaction(
+            orderId: trxId!,
+            expiredMintute: 5,
+            amount: totalTransaksi,
+          ));
           print(respPayment.webhookUrl);
           Navigator.pushNamed(context, RoutesName.qrisPayment, arguments: {
             'webhook_url': respPayment.webhookUrl,

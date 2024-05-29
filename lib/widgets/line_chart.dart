@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_portal/utils/colors.dart';
 
-class LineChart extends StatelessWidget {
-  const LineChart({
+class LineChartWidget extends StatelessWidget {
+  const LineChartWidget({
     super.key,
   });
 

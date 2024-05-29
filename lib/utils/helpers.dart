@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:pos_portal/utils/colors.dart';
 
@@ -13,9 +12,9 @@ String formatRupiah(int nominal) {
 }
 
 Color getColorByStock(int? stock) {
-  if(stock == null || stock > 10) {
+  if (stock == null || stock > 10) {
     return MyColors.primary;
-  } else if(stock > 3) {
+  } else if (stock > 3) {
     return MyColors.warning;
   } else {
     return MyColors.error;
@@ -33,7 +32,7 @@ String convertTime(String date) {
 }
 
 String convertPaymentMethod(String paymentMethod) {
-  if(paymentMethod.contains('qris') || paymentMethod.contains('QRIS')) {
+  if (paymentMethod.contains('qris') || paymentMethod.contains('QRIS')) {
     return 'QRIS';
   } else {
     return 'Tunai';

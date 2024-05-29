@@ -11,10 +11,11 @@ class InputField extends StatefulWidget {
   final String? label;
   final bool? isWajibIsi;
   final bool isDuit;
+  final bool isMultiLine;
   late bool inputAngka;
   final bool? isExpanded;
+  final Function(String)? onChanged;
   final String hintText;
-  final String? initialValue;
   final TextEditingController controller;
 
   InputField({
@@ -27,7 +28,8 @@ class InputField extends StatefulWidget {
     this.isWajibIsi = false,
     required this.hintText,
     this.inputAngka = false,
-    this.initialValue,
+    this.isMultiLine = false,
+    this.onChanged,
   });
 
   @override
@@ -76,28 +78,40 @@ class _InputFieldState extends State<InputField> {
           ),
         ),
         TextFormField(
-          initialValue: widget.initialValue,
           expands: widget.isExpanded ?? false,
           controller: widget.controller,
           cursorColor: MyColors.primary,
-          keyboardType:
-              widget.inputAngka ? (TextInputType.number) : TextInputType.text,
+          minLines: widget.isMultiLine ? 2 : null,
+          maxLines: widget.isMultiLine ? 10 : null,
+          maxLength: widget.isMultiLine ? 500 : null,
+          keyboardType: widget.inputAngka
+              ? (TextInputType.number)
+              : (widget.isMultiLine
+                  ? TextInputType.multiline
+                  : TextInputType.text),
           onChanged: widget.inputAngka || widget.isDuit
               ? (value) {
                   if (value.isNotEmpty) {
                     final valueHarga = formatter.getUnformattedValue();
                     debugPrint('valueHarga ${valueHarga.toString()}');
                     widget.onNilaiAngkaChanged!(valueHarga as int? ?? 0);
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(value);
+                    }
                   }
                 }
-              : null,
+              : (widget.onChanged != null)
+                  ? ((value) {
+                      widget.onChanged!(value);
+                    })
+                  : null,
           inputFormatters: widget.isDuit || widget.inputAngka
               ? <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly,
                   formatter
                 ]
               : <TextInputFormatter>[],
-          style: const TextStyle(
+          style: TextStyle(
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.w500,
               fontSize: 17),
@@ -105,18 +119,18 @@ class _InputFieldState extends State<InputField> {
             contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: MyColors.primary,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: MyColors.neutral,
               ),
             ),
             hintText: widget.hintText,
-            hintStyle: const TextStyle(
+            hintStyle: TextStyle(
               color: MyColors.neutral,
             ),
             border: OutlineInputBorder(

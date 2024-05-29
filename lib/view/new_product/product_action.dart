@@ -1,4 +1,9 @@
+import 'dart:io';
+import 'dart:convert';
+import 'package:csv/csv.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pos_portal/data/type/stock_type.dart';
 import 'package:pos_portal/utils/colors.dart';
 import 'package:pos_portal/view_model/new_product_view_model.dart';
@@ -17,6 +22,31 @@ class NewProductAction extends StatefulWidget {
 }
 
 class _NewProductActionState extends State<NewProductAction> {
+  List<List<dynamic>> _data = [];
+  String? filePath;
+
+  void _pickFile() async {
+    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+
+    // if no file is picked
+    if (result == null) return;
+    // we will log the name, size and path of the
+    // first picked file (if multiple are selected)
+    print(result.files.first.name);
+    filePath = result.files.first.path!;
+
+    final input = File(filePath!).openRead();
+    final fields = await input
+        .transform(utf8.decoder)
+        .transform(const CsvToListConverter())
+        .toList();
+
+    setState(() {
+      _data = fields.sublist(1);
+      print(_data.map((e) => null));
+    });
+  }
+
   final NewProductViewModel newProductViewModel = NewProductViewModel();
   TextEditingController namaProdukController = TextEditingController();
   TextEditingController hargaProdukController = TextEditingController();
@@ -47,10 +77,12 @@ class _NewProductActionState extends State<NewProductAction> {
       setState(() {
         namaProdukController.text = product.name;
         hargaProdukController.text = (product.price.toInt()).toString();
-        stokProdukController.text = product.stock.toString();
+        stokProdukController.text =
+            product.stock != null ? product.stock.toString() : '';
         hargaProduk = product.price.toInt();
         stokProduk = product.stock;
-        _character = product.stockType == 0 ? StockType.unlimited : StockType.limited;
+        _character =
+            product.stockType == 0 ? StockType.unlimited : StockType.limited;
       });
     }
   }
@@ -82,7 +114,9 @@ class _NewProductActionState extends State<NewProductAction> {
                 children: [
                   CardAction(
                     isImport: true,
-                    onPressed: () {},
+                    onPressed: () {
+                      _pickFile();
+                    },
                   ),
                   const SizedBox(height: 20),
                   HeadingSection(title: 'Detail Produk'),
@@ -174,6 +208,12 @@ class _NewProductActionState extends State<NewProductAction> {
                               stokProduk = value;
                             });
                           },
+                          onChanged: (p0) {
+                            setState(() {
+                              print(
+                                  "stok contol : ${stokProdukController.text}");
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -218,9 +258,9 @@ class _NewProductActionState extends State<NewProductAction> {
 
   bool get isFilled =>
       namaProdukController.text.isNotEmpty &&
-          hargaProdukController.text.isNotEmpty &&
-          (stokProdukController.text.isNotEmpty ||
-              _character == StockType.unlimited);
+      hargaProdukController.text.isNotEmpty &&
+      (stokProdukController.text.isNotEmpty ||
+          _character == StockType.unlimited);
 
   Product get product => Product(
       id: productId == 0 ? null : productId,
