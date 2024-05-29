@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:pos_portal/routes/route_name.dart';
+import 'package:pos_portal/utils/colors.dart';
 // import 'package:pos_portal/pages/home/new_transaction_page.dart';
 // import 'package:pos_portal/pages/home/stats_page.dart';
 import 'package:pos_portal/widgets/floating_button.dart';
@@ -22,6 +23,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<int> _infoProduct = [];
+  int _selectedSegment = 1;
   @override
   void initState() {
     super.initState();
@@ -30,6 +32,14 @@ class _HomePageState extends State<HomePage> {
 
   void _loadInfoProduct() async {
     // _infoProduct = await _productController.getInfoProduct();
+  }
+
+  void _onSegmentChanged(int value) {
+    setState(() {
+      _selectedSegment = value;
+    });
+    // Do something with the new value
+    print('Selected segment: $value');
   }
 
   @override
@@ -44,10 +54,13 @@ class _HomePageState extends State<HomePage> {
                 CardWallet(),
                 CardInfo(),
                 CardMenu(infoProduct: [1, 1, 1]),
-                SegmentedControl(),
+                SegmentedControl(onValueChanged: _onSegmentChanged),
                 GestureDetector(
                   onTap: () {},
-                  child: LineChartWidget(),
+                  child: SingleChildScrollView(
+                      child: LineChartWidget(
+                    selectedSegment: _selectedSegment,
+                  )),
                 ),
               ],
             ),

@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:pos_portal/utils/colors.dart';
 
 class SegmentedControl extends StatelessWidget {
+  final ValueChanged<int> onValueChanged; // Add this line
+
   const SegmentedControl({
     super.key,
+    required this.onValueChanged, // Add this line
   });
 
   @override
@@ -44,9 +47,7 @@ class SegmentedControl extends StatelessWidget {
       ),
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,
-      onValueChanged: (v) {
-        print(v);
-      },
+      onValueChanged: onValueChanged, // Use the callback
     );
   }
 }
