@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigationViewModel {
   static const String _selectedIndexKey = 'navigation_index';
-  late SharedPreferences _prefs;
+  SharedPreferences? _prefs;
   ValueNotifier<int> selectedIndexNotifier = ValueNotifier<int>(0);
 
   NavigationViewModel() {
@@ -16,12 +16,12 @@ class NavigationViewModel {
   }
 
   void _loadSelectedIndex() {
-    final index = _prefs.getInt(_selectedIndexKey) ?? 0;
+    final index = _prefs?.getInt(_selectedIndexKey) ?? 0;
     selectedIndexNotifier.value = index;
   }
 
   void saveSelectedIndex(int index) {
-    _prefs.setInt(_selectedIndexKey, index);
+    _prefs?.setInt(_selectedIndexKey, index);
     selectedIndexNotifier.value = index;
   }
 }

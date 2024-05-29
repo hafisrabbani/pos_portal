@@ -4,7 +4,8 @@ import 'package:pos_portal/model/api/transaction.dart';
 import 'package:http/http.dart' as http;
 
 class QrisService {
-  final Uri url = Uri.parse('https://a833-114-5-104-143.ngrok-free.app/api/v1');
+  final Uri url = Uri.parse('https://e56e-103-24-56-34.ngrok-free.app'
+      '/api/v1');
 
   Future<RespPayment> createQris(RequestTransaction data) async {
     final response = await http.post(
