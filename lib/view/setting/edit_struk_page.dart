@@ -86,17 +86,19 @@ class _EditStrukState extends State<EditStruk> {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingButtonDefault(
-        isFilled: true,
-        isDisabled:
-            (headerController.text.isEmpty || footerController.text.isEmpty),
-        heroTag: "product",
-        title: 'Simpan',
-        actionPressed: () {
-          saveStruk();
-          Navigator.pop(context);
-        },
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: FloatingButtonDefault(
+          isFilled: true,
+          isDisabled:
+              (headerController.text.isEmpty || footerController.text.isEmpty),
+          heroTag: "product",
+          title: 'Simpan',
+          actionPressed: () {
+            saveStruk();
+            Navigator.pop(context);
+          },
+        ),
       ),
     );
   }
