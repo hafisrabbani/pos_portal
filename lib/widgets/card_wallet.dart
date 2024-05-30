@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:pos_portal/utils/helpers.dart';
 
 class CardWallet extends StatefulWidget {
-  const CardWallet({
+  final String omzet;
+  CardWallet({
     super.key,
+    this.omzet = '0',
   });
 
   @override
@@ -53,7 +56,7 @@ class _CardWalletState extends State<CardWallet> {
                             SvgPicture.asset('assets/svg/logo_white.svg',
                                 width: 20, height: 26.89),
                             SizedBox(width: 8),
-                            Text(
+                            const Text(
                               'Total Omzet',
                               style: TextStyle(
                                 fontFamily: 'Montserrat',
@@ -68,8 +71,8 @@ class _CardWalletState extends State<CardWallet> {
                           margin: EdgeInsets.only(top: 14),
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Text(
-                            'Rp 4.500.000',
-                            style: TextStyle(
+                            'Rp ${widget.omzet}',
+                            style: const TextStyle(
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -78,8 +81,8 @@ class _CardWalletState extends State<CardWallet> {
                           ),
                         ),
                         Text(
-                          '10/05/2024',
-                          style: TextStyle(
+                          convertDate(DateTime.now().toString()),
+                          style: const TextStyle(
                             fontFamily: 'Montserrat',
                             fontWeight: FontWeight.w600,
                             color: Colors.white,

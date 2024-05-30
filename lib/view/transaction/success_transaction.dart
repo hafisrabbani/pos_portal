@@ -21,21 +21,36 @@ class _SuccessPaymentState extends State<SuccessPayment> {
   final PrinterViewModel printerViewModel = PrinterViewModel();
   Transaction? transaction;
   TransactionDetail? transactionDetail;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)!.settings.arguments as Map;
+      final int idTrx = args['trxId'];
+      loadTransaction(idTrx);
+    });
+  }
 
   void loadTransaction(int idTrx) async {
     transaction = await transactionViewModel.getById(idTrx);
     transactionDetail = await transactionViewModel.getTransactionDetails(idTrx);
     setState(() {
-      transaction = transaction;
-      transactionDetail = transactionDetail;
+      isLoading = false;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
-    print('args: $args');
-    final int idTrx = args['trxId'];
-    loadTransaction(idTrx);
+    if (isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context).pushReplacementNamed(RoutesName.home);
@@ -96,7 +111,7 @@ class _SuccessPaymentState extends State<SuccessPayment> {
                             color: Colors.black),
                         children: <TextSpan>[
                           TextSpan(
-                              text: idTrx.toString(),
+                              text: transaction?.id.toString(),
                               style: const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
@@ -111,7 +126,7 @@ class _SuccessPaymentState extends State<SuccessPayment> {
                       ),
                       child: Column(
                         children: [
-                          Text('Metode Pembayaran : ${transaction?.paymentMethod}',
+                          Text('Metode Pembayaran : ${convertPaymentMethod(transaction!.paymentMethod.toString())}',
                             style: const TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 12,
@@ -169,4 +184,3 @@ class _SuccessPaymentState extends State<SuccessPayment> {
     );
   }
 }
-

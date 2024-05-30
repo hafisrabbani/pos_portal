@@ -122,4 +122,24 @@ class TransactionQuery{
     print(result);
     return Transaction.fromMap(result.first);
   }
+
+  Future<String> getOmsetToday() async {
+    final db = await _dbConfig.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
+      SELECT SUM(td.price * td.quantity) as omset
+      FROM Transaction_Detail td
+      JOIN Transaction_Record tr ON td.transaction_id = tr.id
+      WHERE tr.created_time >= date('now')
+    ''');
+    return result.first['omset'].toString();
+  }
+
+  Future<int> getTransactionCount() async {
+    final db = await _dbConfig.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
+      SELECT COUNT(*) as trx_count
+      FROM Transaction_Record
+    ''');
+    return result.first['trx_count'];
+  }
 }

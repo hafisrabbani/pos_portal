@@ -15,7 +15,6 @@ dependencies:
   shared_preferences: ^2.2.3
   flutter_svg: ^2.0.9
   google_fonts: ^6.2.1
-  persistent_bottom_nav_bar: ^5.0.2
   sqflite:
   currency_text_input_formatter: ^2.2.3
   custom_sliding_segmented_control: ^1.8.2

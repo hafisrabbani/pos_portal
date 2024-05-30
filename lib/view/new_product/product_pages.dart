@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:pos_portal/data/type/product_type.dart';
 import 'package:pos_portal/model/product.dart';
 import 'package:pos_portal/routes/route_name.dart';
@@ -30,6 +29,7 @@ class _NewProductPageState extends State<NewProductPage>
   late TabController _tabController;
   final NewProductViewModel _newProductViewModel = NewProductViewModel();
   List<Product> products = [];
+
   @override
   void initState() {
     super.initState();
@@ -56,11 +56,16 @@ class _NewProductPageState extends State<NewProductPage>
     }
   }
 
-  void loadProducts(ProductType type) async{
+  void loadProducts(ProductType type) async {
     final _products = await _newProductViewModel.loadProducts(type);
     setState(() {
       products = _products;
     });
+  }
+
+  void reloadProducts() {
+    _tabController.index = 0;
+    loadProducts(ProductType.all);
   }
 
   @override
@@ -110,7 +115,8 @@ class _NewProductPageState extends State<NewProductPage>
         heroTag: "product",
         title: 'Tambah Produk',
         actionPressed: () {
-          Navigator.pushNamed(context, RoutesName.productAction, arguments: {'productId': 0});
+          Navigator.pushNamed(context, RoutesName.productAction,
+              arguments: {'productId': 0});
         },
       ),
     );
@@ -124,14 +130,19 @@ class _NewProductPageState extends State<NewProductPage>
           title: 'Hapus Produk',
           content: 'Apakah Anda yakin ingin menghapus produk ini?',
           onConfirm: () async {
-            bool isSucceed = await _newProductViewModel.deleteProduct(idProduct);
-            if (isSucceed) {
-              _handleTabSelection();
+            bool isSuccess =
+                await _newProductViewModel.deleteProduct(idProduct);
+            print(isSuccess);
+            if (isSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Produk berhasil dihapus'),
                 ),
               );
+
+              setState(() {
+                reloadProducts();
+              });
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -152,14 +163,27 @@ class _NewProductPageState extends State<NewProductPage>
   Widget buildTabContent(List<Product> products) {
     return SingleChildScrollView(
       child: Column(
-        children: [
+        children: products.isNotEmpty
+            ? [
           ...products.map((product) {
-            print('product: ${product.name}');
-            return NewCardProducts(product: product);
-          }),
+            return GestureDetector(
+              onLongPress: () {
+                _showConfirmDeleteDialog(product.id!);
+              },
+              child: NewCardProducts(product: product),
+            );
+          }).toList(),
+          const SizedBox(height: 100),
+        ]
+            : [
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('Tidak ada produk'),
+            ),
+          ),
         ],
       ),
     );
   }
 }
-

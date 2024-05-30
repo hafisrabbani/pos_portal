@@ -84,4 +84,10 @@ class ProductQuery {
     final List<Map<String, dynamic>> result = await db.rawQuery('SELECT COUNT(*) as total FROM Transaction_Record');
     return result.first['total'];
   }
+
+  Future<int> getProductCount() async {
+    final db = await _dbConfig.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery('SELECT COUNT(*) as total FROM Product');
+    return result.first['total'];
+  }
 }
