@@ -31,22 +31,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getOmzet() async {
-    _omzet = await homepageViewModel.getOmsetToday();
+    final omzet = await homepageViewModel.getOmsetToday();
     setState(() {
+      _omzet = omzet;
     });
   }
 
   void _loadInfoProduct() async {
-    _infoProduct = await homepageViewModel.getTransactionCount();
-    setState(() {});
+    final infoProduct = await homepageViewModel.getTransactionCount();
+    setState(() {
+      _infoProduct = infoProduct;
+    });
   }
 
   void _onSegmentChanged(int value) {
     setState(() {
       _selectedSegment = value;
     });
-    // Do something with the new value
-    print('Selected segment: $value');
   }
 
   @override
