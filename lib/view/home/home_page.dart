@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowMaterialGrid: false,
       home: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(

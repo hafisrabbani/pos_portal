@@ -9,7 +9,6 @@ import '../home/home_page.dart';
 import '../product/product_page.dart';
 import '../transaction/transaction_page.dart';
 
-
 class AppTemplate extends StatefulWidget {
   const AppTemplate({super.key});
 

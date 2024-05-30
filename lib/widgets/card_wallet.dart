@@ -21,7 +21,7 @@ class _CardWalletState extends State<CardWallet> {
             borderRadius: BorderRadius.circular(16),
           ),
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.187,
+          height: 168,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: Stack(
