@@ -21,6 +21,8 @@ class _HistoryTransactionState extends State<HistoryTransaction> {
   final TransactionViewModel transactionViewModel = TransactionViewModel();
   TransactionDetail? transactionDetail;
   final PrinterViewModel printerViewModel = PrinterViewModel();
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +40,7 @@ class _HistoryTransactionState extends State<HistoryTransaction> {
     });
     setState(() {
       transactionDetail = transactionDetail;
+      isLoading = false;
     });
   }
 
@@ -54,7 +57,11 @@ class _HistoryTransactionState extends State<HistoryTransaction> {
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
             ),
-            child: Column(
+            child: isLoading ? const Center(
+              child: CircularProgressIndicator(
+                color: MyColors.primary,
+              ),
+            ) : Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 16),
@@ -72,15 +79,15 @@ class _HistoryTransactionState extends State<HistoryTransaction> {
                     rowItem(
                         'Tanggal',
                         commonText(convertDate(transactionDetail
-                                ?.transaction.CreatedTime
-                                .toString() ??
-                            ''))),
+                            ?.transaction.CreatedTime
+                            .toString() ??
+                            '1970-01-01 00:00:00'))),
                     rowItem(
                         'Jam',
                         commonText(convertTime(transactionDetail
-                                ?.transaction.CreatedTime
-                                .toString() ??
-                            ''))),
+                            ?.transaction.CreatedTime
+                            .toString() ??
+                            '1970-01-01 00:00:00'))),
                     rowItem(
                         'Total',
                         commonText(
@@ -89,7 +96,7 @@ class _HistoryTransactionState extends State<HistoryTransaction> {
                         'Metode Pembayaran',
                         LabelPayment(
                             type:
-                                transactionDetail?.transaction.paymentMethod)),
+                            transactionDetail?.transaction.paymentMethod)),
                   ],
                 ),
                 const SizedBox(height: 20),

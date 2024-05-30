@@ -7,6 +7,7 @@ import 'package:pos_portal/view/product/product_action.dart';
 import 'package:pos_portal/view/setting/edit_struk_page.dart';
 import 'package:pos_portal/view/setting/setting_page.dart';
 import 'package:pos_portal/view/setting/setting_printer.dart';
+import 'package:pos_portal/view/setting/webhook_setting.dart';
 import 'package:pos_portal/view/transaction/cash_payment.dart';
 import 'package:pos_portal/view/transaction/checkout_confirmation.dart';
 import 'package:pos_portal/view/transaction/failed_transaction.dart';
@@ -58,6 +59,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => const EditStruk());
       case RoutesName.settingPrinter:
         return MaterialPageRoute(builder: (_) => const SettingPrinter());
+      case RoutesName.settingWebHook:
+        return MaterialPageRoute(builder: (_) => const WebHookPage());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

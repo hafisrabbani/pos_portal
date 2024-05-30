@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pos_portal/data/type/stock_type.dart';
 import 'package:pos_portal/utils/colors.dart';
 import 'package:pos_portal/view_model/new_product_view_model.dart';
@@ -27,24 +26,47 @@ class _NewProductActionState extends State<NewProductAction> {
 
   void _pickFile() async {
     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
-
-    // if no file is picked
     if (result == null) return;
-    // we will log the name, size and path of the
-    // first picked file (if multiple are selected)
-    print(result.files.first.name);
-    filePath = result.files.first.path!;
+    String? filePath = result.files.first.path;
 
-    final input = File(filePath!).openRead();
+    if (filePath == null) return;
+
+    final input = File(filePath).openRead();
     final fields = await input
         .transform(utf8.decoder)
         .transform(const CsvToListConverter())
         .toList();
-
-    setState(() {
-      _data = fields.sublist(1);
-      print(_data.map((e) => null));
+    var temp = fields.sublist(1);
+    List<List<dynamic>> temp0 = [];
+    temp.forEach((element) {
+      List<dynamic> row = element[0].toString().split(';');
+      temp0.add(row);
     });
+    setState(() {
+      _data = temp0;
+    });
+
+    bool resultImport = await importData();
+    if (resultImport) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Berhasil mengimport data'),
+        ),
+      );
+      Navigator.pushNamed(context, RoutesName.product);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Gagal mengimport data'),
+        ),
+      );
+    }
+  }
+
+  Future<bool> importData() async {
+    if (_data.isEmpty) return false;
+    bool result = await newProductViewModel.importData(_data);
+    return result;
   }
 
   final NewProductViewModel newProductViewModel = NewProductViewModel();
@@ -78,11 +100,11 @@ class _NewProductActionState extends State<NewProductAction> {
         namaProdukController.text = product.name;
         hargaProdukController.text = (product.price.toInt()).toString();
         stokProdukController.text =
-            product.stock != null ? product.stock.toString() : '';
+        product.stock != null ? product.stock.toString() : '';
         hargaProduk = product.price.toInt();
         stokProduk = product.stock;
         _character =
-            product.stockType == 0 ? StockType.unlimited : StockType.limited;
+        product.stockType == 0 ? StockType.unlimited : StockType.limited;
       });
     }
   }
@@ -258,9 +280,9 @@ class _NewProductActionState extends State<NewProductAction> {
 
   bool get isFilled =>
       namaProdukController.text.isNotEmpty &&
-      hargaProdukController.text.isNotEmpty &&
-      (stokProdukController.text.isNotEmpty ||
-          _character == StockType.unlimited);
+          hargaProdukController.text.isNotEmpty &&
+          (stokProdukController.text.isNotEmpty ||
+              _character == StockType.unlimited);
 
   Product get product => Product(
       id: productId == 0 ? null : productId,

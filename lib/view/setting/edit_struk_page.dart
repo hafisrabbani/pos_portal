@@ -20,8 +20,7 @@ class _EditStrukState extends State<EditStruk> {
   void loadStruk() async {
     final headerStruk = await _settingViewModel.getStrukHeader();
     final footerStruk = await _settingViewModel.getStrukFooter();
-    print('headerStruk: $headerStruk');
-    print('footerStruk: $footerStruk');
+
     setState(() {
       headerController.text = headerStruk;
       footerController.text = footerStruk;

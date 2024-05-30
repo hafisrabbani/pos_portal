@@ -1,12 +1,9 @@
-import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:pos_portal/routes/route_name.dart';
 import 'package:pos_portal/utils/colors.dart';
-// import 'package:pos_portal/pages/home/new_transaction_page.dart';
-// import 'package:pos_portal/pages/home/stats_page.dart';
+import 'package:pos_portal/view_model/homepage_view_model.dart';
 import 'package:pos_portal/widgets/floating_button.dart';
 import 'package:pos_portal/widgets/card_info.dart';
 import 'package:pos_portal/widgets/card_menu.dart';
@@ -22,16 +19,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<int> _infoProduct = [];
+  final HomepageViewModel homepageViewModel = HomepageViewModel();
+  List<int> _infoProduct = [0,0,0];
+  String _omzet = '0';
   int _selectedSegment = 1;
   @override
   void initState() {
     super.initState();
     _loadInfoProduct();
+    getOmzet();
+  }
+
+  void getOmzet() async {
+    _omzet = await homepageViewModel.getOmsetToday();
+    setState(() {
+    });
   }
 
   void _loadInfoProduct() async {
-    // _infoProduct = await _productController.getInfoProduct();
+    _infoProduct = await homepageViewModel.getTransactionCount();
+    setState(() {});
   }
 
   void _onSegmentChanged(int value) {
@@ -54,7 +61,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 CardWallet(),
                 CardInfo(),
-                CardMenu(infoProduct: [1, 1, 1]),
+                CardMenu(infoProduct: _infoProduct),
                 SegmentedControl(onValueChanged: _onSegmentChanged),
                 GestureDetector(
                   onTap: () {},

@@ -55,6 +55,26 @@ class SettingPage extends StatelessWidget {
               Navigator.pushNamed(context, RoutesName.settingStruk);
             },
           ),
+          ListTile(
+            title: const Text(
+              'Edit Webhook',
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: Colors.black,
+              ),
+            ),
+            subtitle: const Text('Setting API Payment'),
+            leading: SvgPicture.asset(
+              'assets/svg/icon_struk.svg',
+              width: 24, // adjust the width as needed
+              height: 24, // adjust the height as needed
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, RoutesName.settingWebHook);
+            },
+          ),
         ],
       ),
     );
