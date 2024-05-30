@@ -18,4 +18,7 @@ class HomepageViewModel {
     final stockCount = await productQuery.sumStock();
     return [almostOutOfStockCount.length, stockCount, transactionCount];
   }
+
+  void dispose() {
+  }
 }

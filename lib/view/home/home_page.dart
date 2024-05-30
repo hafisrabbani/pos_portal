@@ -20,9 +20,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final HomepageViewModel homepageViewModel = HomepageViewModel();
-  List<int> _infoProduct = [0,0,0];
+  List<int> _infoProduct = [0, 0, 0];
   String _omzet = '0';
   int _selectedSegment = 1;
+
   @override
   void initState() {
     super.initState();
@@ -30,18 +31,28 @@ class _HomePageState extends State<HomePage> {
     getOmzet();
   }
 
+  @override
+  void dispose() {
+    homepageViewModel.dispose();
+    super.dispose();
+  }
+
   void getOmzet() async {
     final omzet = await homepageViewModel.getOmsetToday();
-    setState(() {
-      _omzet = omzet;
-    });
+    if (mounted) {
+      setState(() {
+        _omzet = omzet;
+      });
+    }
   }
 
   void _loadInfoProduct() async {
     final infoProduct = await homepageViewModel.getTransactionCount();
-    setState(() {
-      _infoProduct = infoProduct;
-    });
+    if (mounted) {
+      setState(() {
+        _infoProduct = infoProduct;
+      });
+    }
   }
 
   void _onSegmentChanged(int value) {
@@ -67,9 +78,10 @@ class _HomePageState extends State<HomePage> {
                 GestureDetector(
                   onTap: () {},
                   child: SingleChildScrollView(
-                      child: LineChartWidget(
-                    selectedSegment: _selectedSegment,
-                  )),
+                    child: LineChartWidget(
+                      selectedSegment: _selectedSegment,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -79,7 +91,7 @@ class _HomePageState extends State<HomePage> {
           heroTag: "home",
           title: 'Tambah Transaksi',
           actionPressed: () =>
-              {Navigator.pushNamed(context, RoutesName.newTransaction)},
+          {Navigator.pushNamed(context, RoutesName.newTransaction)},
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
