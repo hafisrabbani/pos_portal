@@ -79,8 +79,10 @@ class PrinterViewModel {
 
       // BODY
       printer!.printLeftRight('Trx ID : ', transaction.id.toString(), 1);
-      printer!.printLeftRight('Tgl : ', convertDate(transaction.CreatedTime!), 1);
-      printer!.printLeftRight('Jam : ', convertTime(transaction.CreatedTime!), 1);
+      printer!
+          .printLeftRight('Tgl : ', convertDate(transaction.CreatedTime!), 1);
+      printer!
+          .printLeftRight('Jam : ', convertTime(transaction.CreatedTime!), 1);
       printer!.printCustom('--------------------------------', 1, 1);
       printer!.printNewLine();
       items.forEach((item) {
@@ -89,18 +91,21 @@ class PrinterViewModel {
             '${item.Quantity} pcs', 'Rp ${formatRupiah(item.Price)}', 1);
       });
       printer!.printCustom('--------------------------------', 1, 1);
-      printer!.printLeftRight('Total : ',
-          'Rp ${formatRupiah(transaction.TotalPayment ?? 0)}', 1);
-      printer!.printLeftRight('Pembayaran : ', convertPaymentMethod(transaction.paymentMethod.toString()), 1);
-      printer!.printLeftRight('Tunai : ', 'Rp ${formatRupiah(transaction.NominalPayment ?? 0)}', 1);
-      printer!.printLeftRight('Kembalian : ', 'Rp ${formatRupiah(transaction.Change ?? 0)}', 1);
+      printer!.printLeftRight(
+          'Total : ', 'Rp ${formatRupiah(transaction.TotalPayment ?? 0)}', 1);
+      printer!.printLeftRight('Pembayaran : ',
+          convertPaymentMethod(transaction.paymentMethod.toString()), 1);
+      printer!.printLeftRight(
+          'Tunai : ', 'Rp ${formatRupiah(transaction.NominalPayment ?? 0)}', 1);
+      printer!.printLeftRight(
+          'Kembalian : ', 'Rp ${formatRupiah(transaction.Change ?? 0)}', 1);
       printer!.printCustom('--------------------------------', 1, 1);
       // END BODY
 
       // FOOTER
       printer!.printCustom(_strukFooter, 1, 1);
       printer!.printNewLine();
-      printer!.printCustom('Powered by Pos Portal', 1, 1);
+      printer!.printCustom(' by Pos Portal', 1, 1);
       printer!.printNewLine();
       // END FOOTER
       printer!.paperCut();

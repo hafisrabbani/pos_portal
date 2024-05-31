@@ -1,6 +1,8 @@
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
+import 'package:pos_portal/utils/colors.dart';
 import 'package:pos_portal/view_model/printer_view_model.dart';
+import 'package:pos_portal/widgets/topbar.dart';
 
 class SettingPrinter extends StatefulWidget {
   const SettingPrinter({super.key});
@@ -18,17 +20,77 @@ class _SettingPrinterState extends State<SettingPrinter> {
     printerViewModel.getDevices();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: topBar(context: context, title: 'Sambungkan Printer'),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Perbarui perangkat yang tersedia',
+                  style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600),
+                ),
+                IconButton(
+                  icon: Container(
+                      padding: EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: MyColors.primary,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(
+                        Icons.refresh,
+                        color: Colors.white,
+                        size: 20,
+                      )),
+                  onPressed: () {
+                    printerViewModel.getDevices();
+                  },
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Status: ',
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: MyColors.bgError,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    printerViewModel.isConnected
+                        ? 'Connected'
+                        : 'Not Connected',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: printerViewModel.isConnected
+                          ? MyColors.success
+                          : MyColors.error,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             DropdownButton<BluetoothDevice>(
               value: printerViewModel.selectedDevice,
               hint: const Text('Select Device'),
@@ -55,7 +117,8 @@ class _SettingPrinterState extends State<SettingPrinter> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Atur padding
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15), // Atur padding
                   ),
                   child: const Text('Refresh Devices'),
                 ),
@@ -65,7 +128,8 @@ class _SettingPrinterState extends State<SettingPrinter> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Atur padding
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15), // Atur padding
                   ),
                   child: const Text('Connect'),
                 ),
@@ -75,7 +139,8 @@ class _SettingPrinterState extends State<SettingPrinter> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Atur padding
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15), // Atur padding
                   ),
                   child: const Text('Print Text'),
                 ),

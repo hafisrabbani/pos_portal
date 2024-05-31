@@ -68,7 +68,8 @@ class _CardProductsState extends State<CardProducts> {
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
-                      color: getColorByStock(product.stockType == 0 ? null : product.stock),
+                      color: getColorByStock(
+                          product.stockType == 0 ? null : product.stock),
                     ),
                   ),
                   Text(
@@ -77,7 +78,8 @@ class _CardProductsState extends State<CardProducts> {
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
-                      color: getColorByStock(product.stockType == 0 ? null : product.stock),
+                      color: getColorByStock(
+                          product.stockType == 0 ? null : product.stock),
                     ),
                   ),
                 ],

@@ -1,6 +1,7 @@
-class RoutesName{
+class RoutesName {
   static const String ROOT = '/';
   static const String home = '/home';
+  static const String onboarding = '/onBoarding';
   static const String product = '/product';
   static const String productAction = '/product/action';
   static const String transaction = '/transaction';
