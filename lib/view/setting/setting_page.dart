@@ -9,7 +9,17 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(context: context, title: 'Pengaturan', isCanBack: false),
+      appBar: AppBar(
+        leading: SizedBox(),
+        title: const Text(
+          'Pengaturan',
+          style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 17,
+              fontWeight: FontWeight.w600),
+        ),
+        centerTitle: true,
+      ),
       body: Column(
         children: [
           ListTile(

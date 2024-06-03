@@ -4,7 +4,7 @@ import 'package:pos_portal/model/product.dart';
 import 'package:pos_portal/model/transaction.dart';
 import 'package:pos_portal/model/transaction_item.dart';
 
-class TransactionQuery{
+class TransactionQuery {
   final DBConfig _dbConfig = DBConfig.instance;
 
   Future<int> createTrx(Map<String, dynamic> data) async {
@@ -23,13 +23,16 @@ class TransactionQuery{
     return await db.insert('Transaction_Detail', data) != 0;
   }
 
-  Future<int?> createFullTrx(Transaction data, List<TransactionItem> items) async {
+  Future<int?> createFullTrx(
+      Transaction data, List<TransactionItem> items) async {
     try {
       final db = await _dbConfig.database;
       final trxData = data.toMap();
       trxData['created_time'] = DateTime.now().toIso8601String();
       trxData['updated_time'] = DateTime.now().toIso8601String();
-      trxData['status'] = (data.status == TransactionStatusType.paid) ? 1 : ((data.status == TransactionStatusType.failed) ? 2 : 0);
+      trxData['status'] = (data.status == TransactionStatusType.paid)
+          ? 1
+          : ((data.status == TransactionStatusType.failed) ? 2 : 0);
       trxData['payment_method'] = data.paymentMethod.toString().split('.').last;
       print(data.paymentMethod.toString().split('.').last);
 
@@ -46,9 +49,14 @@ class TransactionQuery{
           await txn.insert('Transaction_Detail', itemData);
 
           // check if type product = 1 (product) then update stock (before it query stock)
-          Product product = await txn.query('Product', where: 'id = ?', whereArgs: [item.ProductId]).then((value) => Product.fromMap(value.first));
-          print("Product : ${product.name} stockType: ${product.stockType} stock: ${product.stock} item.Quantity: ${item.Quantity}");
-          if(product.stockType == 1){
+          Product product = await txn.query('Product',
+              where: 'id = ?',
+              whereArgs: [
+                item.ProductId
+              ]).then((value) => Product.fromMap(value.first));
+          print(
+              "Product : ${product.name} stockType: ${product.stockType} stock: ${product.stock} item.Quantity: ${item.Quantity}");
+          if (product.stockType == 1) {
             product.stock = (product.stock! - item.Quantity);
             await txn.rawQuery('''
               UPDATE Product
@@ -68,8 +76,6 @@ class TransactionQuery{
     }
   }
 
-
-
   Future<List<Transaction>> selectAll() async {
     final db = await _dbConfig.database;
     // final List<Map<String, dynamic>> result = await db.query('Transaction_Record');
@@ -84,7 +90,7 @@ class TransactionQuery{
   Future<bool> updateStatusPayment(int id, TransactionStatusType status) async {
     final db = await _dbConfig.database;
     int statusIndex = 0;
-    switch(status){
+    switch (status) {
       case TransactionStatusType.paid:
         statusIndex = 1;
         break;
@@ -102,7 +108,6 @@ class TransactionQuery{
     ''', [statusIndex, id]) != 0;
   }
 
-
   Future<List<TransactionItem>> selectTrxItem(int trxId) async {
     final db = await _dbConfig.database;
     // final List<Map<String, dynamic>> result = await db.query('Transaction_Detail', where: 'transaction_id = ?', whereArgs: [trxId]);
@@ -118,7 +123,8 @@ class TransactionQuery{
 
   Future<Transaction> selectById(int id) async {
     final db = await _dbConfig.database;
-    final List<Map<String, dynamic>> result = await db.query('Transaction_Record', where: 'id = ?', whereArgs: [id]);
+    final List<Map<String, dynamic>> result =
+        await db.query('Transaction_Record', where: 'id = ?', whereArgs: [id]);
     print(result);
     return Transaction.fromMap(result.first);
   }
