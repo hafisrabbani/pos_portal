@@ -78,34 +78,34 @@ void showCustomSnackbar({
             ),
           ],
         ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            style: ButtonStyle(
-              side: MaterialStateProperty.all(
-                  BorderSide(color: MyColors.primary)),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: MyColors.primary),
-                ),
-              ),
-            ),
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              _isSnackbarVisible = false;
-            },
-            child: Text(
-              'Tutup',
-              style: TextStyle(
-                color: MyColors.primary,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
-              ),
-            ),
-          ),
-        ),
+        // Align(
+        //   alignment: Alignment.centerRight,
+        //   child: TextButton(
+        //     style: ButtonStyle(
+        //       side: MaterialStateProperty.all(
+        //           BorderSide(color: MyColors.primary)),
+        //       shape: MaterialStateProperty.all(
+        //         RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(12),
+        //           side: BorderSide(color: MyColors.primary),
+        //         ),
+        //       ),
+        //     ),
+        //     onPressed: () {
+        //       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        //       _isSnackbarVisible = false;
+        //     },
+        //     child: Text(
+        //       'Tutup',
+        //       style: TextStyle(
+        //         color: MyColors.primary,
+        //         fontFamily: 'Montserrat',
+        //         fontWeight: FontWeight.w600,
+        //         fontSize: 15,
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     ),
     backgroundColor: bgColor,

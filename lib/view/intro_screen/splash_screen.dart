@@ -20,9 +20,9 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () async {
       Navigator.pushNamed(context, RoutesName.home);
       final isFirst = sharedPreferences.getBool('isFirst') ?? true;
-      sharedPreferences.setBool('isFirst', true);
       debugPrint('isFirst: $isFirst');
       if (isFirst) {
+        sharedPreferences.setBool('isFirst', false);
         Navigator.pushNamed(context, RoutesName.onboarding);
       } else {
         Navigator.pushNamed(context, RoutesName.home);

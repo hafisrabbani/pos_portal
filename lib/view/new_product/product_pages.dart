@@ -77,10 +77,7 @@ class _NewProductPageState extends State<NewProductPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(
-        context: context,
-        title: 'Produk',
-      ),
+      appBar: topBar(context: context, title: 'Produk', isCanBack: false),
       body: Column(
         children: [
           Row(
@@ -165,24 +162,24 @@ class _NewProductPageState extends State<NewProductPage>
       child: Column(
         children: products.isNotEmpty
             ? [
-          ...products.map((product) {
-            return GestureDetector(
-              onLongPress: () {
-                _showConfirmDeleteDialog(product.id!);
-              },
-              child: NewCardProducts(product: product),
-            );
-          }).toList(),
-          const SizedBox(height: 100),
-        ]
+                ...products.map((product) {
+                  return GestureDetector(
+                    onLongPress: () {
+                      _showConfirmDeleteDialog(product.id!);
+                    },
+                    child: NewCardProducts(product: product),
+                  );
+                }).toList(),
+                const SizedBox(height: 100),
+              ]
             : [
-          const Center(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text('Tidak ada produk'),
-            ),
-          ),
-        ],
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text('Tidak ada produk'),
+                  ),
+                ),
+              ],
       ),
     );
   }

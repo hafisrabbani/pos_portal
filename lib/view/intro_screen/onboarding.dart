@@ -52,7 +52,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
             child: FloatingButtonDefault(
               title: (_currentIndex < 2) ? 'Selanjutnya' : 'Mulai',
               actionPressed: () {
-                if (_currentIndex == 3) {
+                if (_currentIndex >= 2) {
                   _onIntroEnd(context);
                 } else {
                   debugPrint('index: $_currentIndex');

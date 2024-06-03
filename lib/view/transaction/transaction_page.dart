@@ -35,7 +35,7 @@ class _TransactionPageState extends State<TransactionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(context: context, title: 'Transaksi'),
+      appBar: topBar(context: context, title: 'Transaksi', isCanBack: false),
       body: SafeArea(
         child: Column(
           children: [

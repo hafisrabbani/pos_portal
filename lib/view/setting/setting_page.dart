@@ -9,10 +9,7 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(
-        context: context,
-        title: 'Pengaturan',
-      ),
+      appBar: topBar(context: context, title: 'Pengaturan', isCanBack: false),
       body: Column(
         children: [
           ListTile(
