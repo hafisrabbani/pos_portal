@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pos_portal/routes/route_name.dart';
-import '../../widgets/topbar.dart';
+import 'package:pos_portal/utils/colors.dart';
+import 'package:pos_portal/widgets/topbar.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -9,34 +10,28 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: SizedBox(),
-        title: const Text(
-          'Pengaturan',
-          style: TextStyle(
-              fontFamily: 'Montserrat',
-              fontSize: 17,
-              fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-      ),
+      appBar: topBar(context: context, title: 'Pengaturan', isCanBack: false),
       body: Column(
         children: [
           ListTile(
             title: const Text(
-              'Setting Printer',
+              'Sambungkan Printer',
               style: TextStyle(
                 fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
                 color: Colors.black,
               ),
             ),
-            subtitle: const Text('Pilih Printer yang akan digunakan'),
-            leading: SvgPicture.asset(
-              'assets/svg/icon_gembok.svg',
-              width: 24, // adjust the width as needed
-              height: 24, // adjust the height as needed
+            subtitle: const Text('Pilih Printer yang akan digunakan',
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300)),
+            leading: Icon(
+              Icons.print_rounded,
+              color: MyColors.primary,
+              size: 24,
             ),
             onTap: () {
               Navigator.pushNamed(context, RoutesName.settingPrinter);
@@ -47,12 +42,18 @@ class SettingPage extends StatelessWidget {
               'Edit Struk',
               style: TextStyle(
                 fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
                 color: Colors.black,
               ),
             ),
-            subtitle: const Text('Ubah Header dan Footer Struk'),
+            subtitle: const Text(
+              'Ubah Header dan Footer Struk',
+              style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w300),
+            ),
             leading: SvgPicture.asset(
               'assets/svg/icon_struk.svg',
               width: 24, // adjust the width as needed
@@ -67,16 +68,20 @@ class SettingPage extends StatelessWidget {
               'Edit Webhook',
               style: TextStyle(
                 fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
                 color: Colors.black,
               ),
             ),
-            subtitle: const Text('Setting API Payment'),
-            leading: SvgPicture.asset(
-              'assets/svg/icon_struk.svg',
-              width: 24, // adjust the width as needed
-              height: 24, // adjust the height as needed
+            subtitle: const Text('Setting API Payment',
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300)),
+            leading: Icon(
+              Icons.webhook_rounded,
+              color: MyColors.primary,
+              size: 24,
             ),
             onTap: () {
               Navigator.pushNamed(context, RoutesName.settingWebHook);

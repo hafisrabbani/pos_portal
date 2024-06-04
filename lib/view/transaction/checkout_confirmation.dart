@@ -10,6 +10,7 @@ import 'package:pos_portal/routes/route_name.dart';
 import 'package:pos_portal/utils/colors.dart';
 import 'package:pos_portal/utils/helpers.dart';
 import 'package:pos_portal/view_model/transaction_view_model.dart';
+import 'package:pos_portal/widgets/copy_clipboard.dart';
 import 'package:pos_portal/widgets/table_row_widget.dart';
 import 'package:pos_portal/widgets/topbar.dart';
 
@@ -55,7 +56,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                     children: [
                       textBiasa(title: 'Total Transaksi'),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.symmetric(vertical: 4),
                         child: Text(
                           'Rp ${formatRupiah(totalTransaksi)}',
                           style: const TextStyle(
@@ -65,43 +66,48 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                           ),
                         ),
                       ),
-                      Table(
-                        border: TableBorder.all(
-                            color: MyColors.primary,
-                            borderRadius: BorderRadius.circular(5)),
-                        columnWidths: const {
-                          0: FixedColumnWidth(35.0),
-                          1: FlexColumnWidth(),
-                          2: FixedColumnWidth(40.0),
-                          3: FixedColumnWidth(100.0),
-                        },
-                        children: [
-                          TableRow(
-                            decoration: BoxDecoration(
-                                color: MyColors.tertiary,
-                                borderRadius: BorderRadius.circular(5)),
-                            children: [
-                              tableRowItem(title: 'No', isHeader: true),
-                              tableRowItem(title: 'Nama', isHeader: true),
-                              tableRowItem(title: 'Qty', isHeader: true),
-                              tableRowItem(title: 'Harga', isHeader: true),
-                            ],
-                          ),
-                          ...selectedItems.asMap().entries.map((entry) {
-                            int index = entry.key;
-                            var item = entry.value;
-                            return TableRow(
+                      const SizedBox(height: 16),
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        child: Table(
+                          border: TableBorder.all(
+                              color: MyColors.primary,
+                              borderRadius: BorderRadius.circular(5)),
+                          columnWidths: const {
+                            0: FixedColumnWidth(35.0),
+                            1: FlexColumnWidth(),
+                            2: FixedColumnWidth(40.0),
+                            3: FixedColumnWidth(100.0),
+                          },
+                          children: [
+                            TableRow(
+                              decoration: BoxDecoration(
+                                  color: MyColors.tertiary,
+                                  borderRadius: BorderRadius.circular(5)),
                               children: [
-                                tableRowItem(title: (index + 1).toString()),
-                                tableRowItem(title: item['name']),
-                                tableRowItem(
-                                    title: item['quantity'].toString()),
-                                tableRowItem(title: 'Rp ${item['price']}'),
+                                tableRowItem(title: 'No', isHeader: true),
+                                tableRowItem(title: 'Nama', isHeader: true),
+                                tableRowItem(title: 'Qty', isHeader: true),
+                                tableRowItem(title: 'Harga', isHeader: true),
                               ],
-                            );
-                          }).toList(),
-                        ],
+                            ),
+                            ...selectedItems.asMap().entries.map((entry) {
+                              int index = entry.key;
+                              var item = entry.value;
+                              return TableRow(
+                                children: [
+                                  tableRowItem(title: (index + 1).toString()),
+                                  tableRowItem(title: item['name']),
+                                  tableRowItem(
+                                      title: item['quantity'].toString()),
+                                  tableRowItem(title: 'Rp ${item['price']}'),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
                       ),
+                      CopyIdClipboard(transactionId: 12321321)
                     ],
                   ),
                 ),

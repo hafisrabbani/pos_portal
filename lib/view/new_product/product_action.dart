@@ -9,6 +9,7 @@ import 'package:pos_portal/view_model/new_product_view_model.dart';
 import 'package:pos_portal/widgets/card_action.dart';
 import 'package:pos_portal/widgets/floating_button.dart';
 import 'package:pos_portal/widgets/input_field.dart';
+import 'package:pos_portal/widgets/snackbar.dart';
 import 'package:pos_portal/widgets/topbar.dart';
 import 'package:pos_portal/model/product.dart';
 import '../../routes/route_name.dart';
@@ -100,11 +101,11 @@ class _NewProductActionState extends State<NewProductAction> {
         namaProdukController.text = product.name;
         hargaProdukController.text = (product.price.toInt()).toString();
         stokProdukController.text =
-        product.stock != null ? product.stock.toString() : '';
+            product.stock != null ? product.stock.toString() : '';
         hargaProduk = product.price.toInt();
         stokProduk = product.stock;
         _character =
-        product.stockType == 0 ? StockType.unlimited : StockType.limited;
+            product.stockType == 0 ? StockType.unlimited : StockType.limited;
       });
     }
   }
@@ -256,19 +257,23 @@ class _NewProductActionState extends State<NewProductAction> {
                   ? await newProductViewModel.addProduct(product)
                   : await newProductViewModel.updateProduct(product);
               if (result) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Berhasil menyimpan produk'),
-                  ),
-                );
+                showCustomSnackbar(
+                    context: context,
+                    title: productId == 0
+                        ? 'Berhasil menambahkan produk'
+                        : 'Berhasil mengubah produk',
+                    message: productId == 0
+                        ? 'Produk baru berhasil ditambahkan'
+                        : 'Produk berhasil diubah',
+                    theme: SnackbarTheme.success);
                 Navigator.pushNamed(context, RoutesName.product);
               }
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Harap isi semua data'),
-                ),
-              );
+              showCustomSnackbar(
+                  context: context,
+                  title: 'Input tidak valid',
+                  message: 'Harap isi input dengan benar',
+                  theme: SnackbarTheme.error);
             }
           },
           isFilled: true,
@@ -280,9 +285,9 @@ class _NewProductActionState extends State<NewProductAction> {
 
   bool get isFilled =>
       namaProdukController.text.isNotEmpty &&
-          hargaProdukController.text.isNotEmpty &&
-          (stokProdukController.text.isNotEmpty ||
-              _character == StockType.unlimited);
+      hargaProdukController.text.isNotEmpty &&
+      (stokProdukController.text.isNotEmpty ||
+          _character == StockType.unlimited);
 
   Product get product => Product(
       id: productId == 0 ? null : productId,

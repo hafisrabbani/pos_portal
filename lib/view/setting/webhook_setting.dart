@@ -3,6 +3,7 @@ import 'package:pos_portal/view_model/setting_view_model.dart';
 import 'package:pos_portal/widgets/floating_button.dart';
 import 'package:pos_portal/widgets/input_field.dart';
 import 'package:pos_portal/widgets/topbar.dart';
+
 class WebHookPage extends StatefulWidget {
   const WebHookPage({super.key});
 
@@ -34,7 +35,8 @@ class _WebHookPageState extends State<WebHookPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(context: context, title: 'Edit WebHook QRIS'),
+      appBar:
+          topBar(context: context, title: 'Edit WebHook QRIS', isCanBack: true),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -53,8 +55,7 @@ class _WebHookPageState extends State<WebHookPage> {
                     hintText: 'https://webhook.com',
                     isMultiLine: true,
                     onChanged: (p0) {
-                      setState(() {
-                      });
+                      setState(() {});
                     },
                   ),
                 ],

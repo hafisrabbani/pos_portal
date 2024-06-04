@@ -7,6 +7,7 @@ import 'package:pos_portal/view_model/transaction_view_model.dart';
 import 'package:pos_portal/widgets/label_transaction.dart';
 import 'package:pos_portal/widgets/payment_method_widget.dart';
 import 'package:pos_portal/widgets/printer_button.dart';
+import 'package:pos_portal/widgets/snackbar.dart';
 import 'package:pos_portal/widgets/table_row_widget.dart';
 import 'package:pos_portal/widgets/topbar.dart';
 
@@ -47,7 +48,8 @@ class _HistoryTransactionState extends State<HistoryTransaction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(context: context, title: 'Transaction Detail'),
+      appBar: topBar(
+          context: context, title: 'Transaction Detail', isCanBack: true),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -57,102 +59,142 @@ class _HistoryTransactionState extends State<HistoryTransaction> {
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
             ),
-            child: isLoading ? const Center(
-              child: CircularProgressIndicator(
-                color: MyColors.primary,
-              ),
-            ) : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 16),
-                if (transactionDetail != null) const SizedBox(height: 16),
-                Column(
-                  children: [
-                    rowItem(
-                        'Status',
-                        LabelTransaksi(
-                            status: transactionDetail?.transaction.status)),
-                    rowItem(
-                        'ID Transaksi',
-                        commonText(
-                            '#${transactionDetail?.transaction.id.toString()}')),
-                    rowItem(
-                        'Tanggal',
-                        commonText(convertDate(transactionDetail
-                            ?.transaction.CreatedTime
-                            .toString() ??
-                            '1970-01-01 00:00:00'))),
-                    rowItem(
-                        'Jam',
-                        commonText(convertTime(transactionDetail
-                            ?.transaction.CreatedTime
-                            .toString() ??
-                            '1970-01-01 00:00:00'))),
-                    rowItem(
-                        'Total',
-                        commonText(
-                            'Rp ${formatRupiah(transactionDetail?.transaction.TotalPayment ?? 0)}')),
-                    rowItem(
-                        'Metode Pembayaran',
-                        LabelPayment(
-                            type:
-                            transactionDetail?.transaction.paymentMethod)),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  child: Table(
-                    border: TableBorder.all(
-                        color: MyColors.primary,
-                        borderRadius: BorderRadius.circular(5)),
-                    columnWidths: const {
-                      0: FixedColumnWidth(35.0),
-                      1: FlexColumnWidth(),
-                      2: FixedColumnWidth(40.0),
-                      3: FixedColumnWidth(100.0),
-                    },
+            child: isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: MyColors.primary,
+                    ),
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      TableRow(
-                        decoration: BoxDecoration(
-                            color: MyColors.primary,
-                            borderRadius: BorderRadius.circular(5)),
+                      const SizedBox(height: 16),
+                      if (transactionDetail != null) const SizedBox(height: 16),
+                      Column(
                         children: [
-                          tableRowItem(title: 'No', isHeader: true),
-                          tableRowItem(title: 'Nama', isHeader: true),
-                          tableRowItem(title: 'Qty', isHeader: true),
-                          tableRowItem(title: 'Harga', isHeader: true),
+                          rowItem(
+                              'Status',
+                              LabelTransaksi(
+                                  status:
+                                      transactionDetail?.transaction.status)),
+                          rowItem(
+                              'ID Transaksi',
+                              commonText(
+                                  '#${transactionDetail?.transaction.id.toString()}')),
+                          rowItem(
+                              'Tanggal',
+                              commonText(convertDate(transactionDetail
+                                      ?.transaction.CreatedTime
+                                      .toString() ??
+                                  '1970-01-01 00:00:00'))),
+                          rowItem(
+                              'Jam',
+                              commonText(convertTime(transactionDetail
+                                      ?.transaction.CreatedTime
+                                      .toString() ??
+                                  '1970-01-01 00:00:00'))),
+                          rowItem(
+                              'Total',
+                              commonText(
+                                  'Rp ${formatRupiah(transactionDetail?.transaction.TotalPayment ?? 0)}')),
+                          rowItem(
+                              'Metode Pembayaran',
+                              LabelPayment(
+                                  type: transactionDetail
+                                      ?.transaction.paymentMethod)),
                         ],
                       ),
-                      ...transactionDetail!.items.asMap().entries.map((entry) {
-                        int index = entry.key;
-                        var item = entry.value;
-                        return TableRow(
+                      const SizedBox(height: 20),
+                      Container(
+                        child: Table(
+                          border: TableBorder.all(
+                              color: MyColors.primary,
+                              borderRadius: BorderRadius.circular(5)),
+                          columnWidths: const {
+                            0: FixedColumnWidth(35.0),
+                            1: FlexColumnWidth(),
+                            2: FixedColumnWidth(40.0),
+                            3: FixedColumnWidth(100.0),
+                          },
                           children: [
-                            tableRowItem(title: (index + 1).toString()),
-                            tableRowItem(title: item.ProductName),
-                            tableRowItem(title: item.Quantity.toString()),
-                            tableRowItem(
-                                title: 'Rp ${formatRupiah(item.Price)}'),
+                            TableRow(
+                              decoration: BoxDecoration(
+                                  color: MyColors.secondary,
+                                  borderRadius: BorderRadius.circular(5)),
+                              children: [
+                                tableRowItem(title: 'No', isHeader: true),
+                                tableRowItem(title: 'Nama', isHeader: true),
+                                tableRowItem(title: 'Qty', isHeader: true),
+                                tableRowItem(title: 'Harga', isHeader: true),
+                              ],
+                            ),
+                            ...transactionDetail!.items
+                                .asMap()
+                                .entries
+                                .map((entry) {
+                              int index = entry.key;
+                              var item = entry.value;
+                              return TableRow(
+                                children: [
+                                  tableRowItem(title: (index + 1).toString()),
+                                  tableRowItem(title: item.ProductName),
+                                  tableRowItem(title: item.Quantity.toString()),
+                                  tableRowItem(
+                                      title: 'Rp ${formatRupiah(item.Price)}'),
+                                ],
+                              );
+                            }).toList(),
                           ],
-                        );
-                      }).toList(),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                PrinterButton(
-                    text: 'Print',
-                    backgroundColor: MyColors.secondary,
-                    textColor: MyColors.primary,
-                    onPressed: () {
-                      printerViewModel.printReceipt(
-                        transactionDetail!.transaction,
-                        transactionDetail!.items,
-                      );
-                    })
-              ],
-            ),
           ),
         ),
+      ),
+      bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () {
+              printerViewModel.isConnected
+                  ? printerViewModel.printReceipt(
+                      transactionDetail!.transaction,
+                      transactionDetail!.items,
+                    )
+                  : showCustomSnackbar(
+                      context: context,
+                      title: 'Belum ada printer yang terhubung',
+                      message: 'Sambungkan dulu printer di halaman pengaturan',
+                      theme: SnackbarTheme.error);
+              ;
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 16),
+              width: MediaQuery.of(context).size.width - 40,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: printerViewModel.isConnected
+                    ? MyColors.secondary
+                    : MyColors.neutral,
+              ),
+              child: Center(
+                child: Text(
+                  'Print',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                    color: printerViewModel.isConnected
+                        ? MyColors.primary
+                        : Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -161,12 +203,15 @@ class _HistoryTransactionState extends State<HistoryTransaction> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title,
-            style: const TextStyle(
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-            )),
+        Container(
+          margin: EdgeInsets.only(bottom: 10),
+          child: Text(title,
+              style: const TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              )),
+        ),
         child,
       ],
     );

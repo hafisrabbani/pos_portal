@@ -26,7 +26,8 @@ class _SettingPrinterState extends State<SettingPrinter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(context: context, title: 'Sambungkan Printer'),
+      appBar: topBar(
+          context: context, title: 'Sambungkan Printer', isCanBack: true),
       body: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Column(

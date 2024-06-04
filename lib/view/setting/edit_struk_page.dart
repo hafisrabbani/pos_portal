@@ -41,7 +41,7 @@ class _EditStrukState extends State<EditStruk> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(context: context, title: 'Edit Struk'),
+      appBar: topBar(context: context, title: 'Edit Struk', isCanBack: true),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

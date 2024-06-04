@@ -77,17 +77,18 @@ class _NewProductPageState extends State<NewProductPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: SizedBox(),
-        title: const Text(
-          'Produk',
-          style: TextStyle(
-              fontFamily: 'Montserrat',
-              fontSize: 17,
-              fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-      ),
+      appBar: topBar(context: context, title: 'Produk', isCanBack: false),
+      // appBar: AppBar(
+      //   leading: SizedBox(),
+      //   title: const Text(
+      //     'Produk',
+      //     style: TextStyle(
+      //         fontFamily: 'Montserrat',
+      //         fontSize: 17,
+      //         fontWeight: FontWeight.w600),
+      //   ),
+      //   centerTitle: true,
+      // ),
       body: Column(
         children: [
           Row(
