@@ -174,7 +174,7 @@ class _FailedTransactionState extends State<FailedTransaction> {
                   FloatingButtonDefault(
                     customColor: MyColors.error,
                     isOutlineTransparent: true,
-                    title: 'Gagal',
+                    title: 'Kembali ke Beranda',
                     actionPressed: () {
                       Navigator.pushReplacementNamed(context, RoutesName.home);
                     },

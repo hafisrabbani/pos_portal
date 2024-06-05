@@ -15,8 +15,7 @@ class _QrisPaymentState extends State<QrisPayment> {
   late final WebViewController _controller;
   final TransactionViewModel _transactionViewModel = TransactionViewModel();
 
-  Future<bool> _onWillPop() async {
-    int? orderId;
+  Future<bool> _onWillPop(trxId) async {
     return (await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -29,9 +28,8 @@ class _QrisPaymentState extends State<QrisPayment> {
           ),
           TextButton(
             onPressed: () async => {
-              orderId = int.tryParse(_controller.currentUrl.toString().split('?order_id=')[1]),
-              await _transactionViewModel.updatePayment(orderId!, TransactionStatusType.failed),
-              Navigator.pushReplacementNamed(context, RoutesName.failedPayment),
+              await _transactionViewModel.updatePayment(trxId, TransactionStatusType.failed),
+              Navigator.pushReplacementNamed(context, RoutesName.failedPayment, arguments: {'trxId': trxId}),
             },
             child: const Text('Ya'),
           ),
@@ -44,8 +42,9 @@ class _QrisPaymentState extends State<QrisPayment> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     final webhookUrl = args['webhook_url'];
+    final transactionId = args['trxId'];
     return WillPopScope(
-      onWillPop: _onWillPop,
+      onWillPop: () => _onWillPop(transactionId),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Menunggu Pembayaran'),

@@ -135,7 +135,7 @@ class TransactionQuery {
       SELECT SUM(td.price * td.quantity) as omset
       FROM Transaction_Detail td
       JOIN Transaction_Record tr ON td.transaction_id = tr.id
-      WHERE tr.created_time >= date('now')
+      WHERE tr.status = 1 AND tr.created_time >= date('now')
     ''');
     return result.first['omset'].toString();
   }

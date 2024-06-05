@@ -1,15 +1,13 @@
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:pos_portal/utils/colors.dart';
 import 'package:pos_portal/view_model/printer_view_model.dart';
-import 'package:pos_portal/widgets/floating_button.dart';
 import 'package:pos_portal/widgets/snackbar.dart';
 import 'package:pos_portal/widgets/topbar.dart';
 
 class SettingPrinter extends StatefulWidget {
   const SettingPrinter({super.key});
+
   @override
   State<SettingPrinter> createState() => _SettingPrinterState();
 }
@@ -37,34 +35,35 @@ class _SettingPrinterState extends State<SettingPrinter> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Perbarui perangkat yang tersedia',
                   style: TextStyle(
                       fontFamily: 'Montserrat',
-                      fontSize: 15,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600),
                 ),
                 IconButton(
                   icon: Container(
-                      padding: EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                         color: MyColors.primary,
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.refresh,
                         color: Colors.white,
                         size: 20,
                       )),
                   onPressed: () {
                     printerViewModel.getDevices();
+                    setState(() {});
                   },
                 )
               ],
             ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+            const Divider(),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 10),
               child: Text(
                 'Perangkat',
                 style: TextStyle(
@@ -75,7 +74,7 @@ class _SettingPrinterState extends State<SettingPrinter> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 border: Border.all(
                   color: MyColors.primary,
@@ -132,6 +131,8 @@ class _SettingPrinterState extends State<SettingPrinter> {
                             message: 'Pilih perangkat terlebih dahulu',
                             theme: SnackbarTheme.error)
                         : printerViewModel.toggleConnection();
+                    setState(() {
+                    });
                   },
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 8),
@@ -150,7 +151,7 @@ class _SettingPrinterState extends State<SettingPrinter> {
                         printerViewModel.isConnected
                             ? 'Putuskan'
                             : 'Sambungkan',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.w700,
                           fontSize: 15,
@@ -174,14 +175,14 @@ class _SettingPrinterState extends State<SettingPrinter> {
                           : () {};
                     },
                     child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 8),
+                      margin: const EdgeInsets.symmetric(vertical: 8),
                       width: MediaQuery.of(context).size.width - 40,
                       height: 40,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         color: MyColors.secondary,
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           'Print Test',
                           style: TextStyle(
@@ -217,9 +218,9 @@ class StatusConnection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           'Status: ',
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Montserrat',
             fontSize: 20,
             fontWeight: FontWeight.bold,

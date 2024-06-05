@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pos_portal/data/type/payment_method_type.dart';
@@ -23,12 +25,14 @@ class PaymentMethodPage extends StatefulWidget {
 
 class _PaymentMethodPageState extends State<PaymentMethodPage> {
   TransactionViewModel transactionViewModel = TransactionViewModel();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     final totalTransaksi = args['totalTransaksi'];
     final selectedItems = args['selectedItems'].toList();
+
     return Scaffold(
       appBar: topBar(
         title: 'Metode Pembayaran',
@@ -36,95 +40,100 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
         context: context,
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              Card(
-                elevation: 2,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: MyColors.secondaryDisabled,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: MyColors.primary, // Warna tepi card
-                      width: 1, // Lebar tepi card
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      textBiasa(title: 'Total Transaksi'),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Text(
-                          'Rp ${formatRupiah(totalTransaksi)}',
-                          style: const TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 2,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: MyColors.secondaryDisabled,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: MyColors.primary,
+                          width: 1,
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        child: Table(
-                          border: TableBorder.all(
-                              color: MyColors.primary,
-                              borderRadius: BorderRadius.circular(5)),
-                          columnWidths: const {
-                            0: FixedColumnWidth(35.0),
-                            1: FlexColumnWidth(),
-                            2: FixedColumnWidth(40.0),
-                            3: FixedColumnWidth(100.0),
-                          },
-                          children: [
-                            TableRow(
-                              decoration: BoxDecoration(
-                                  color: MyColors.tertiary,
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          textBiasa(title: 'Total Transaksi'),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Text(
+                              'Rp ${formatRupiah(totalTransaksi)}',
+                              style: const TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 16),
+                            child: Table(
+                              border: TableBorder.all(
+                                  color: MyColors.primary,
                                   borderRadius: BorderRadius.circular(5)),
+                              columnWidths: const {
+                                0: FixedColumnWidth(35.0),
+                                1: FlexColumnWidth(),
+                                2: FixedColumnWidth(40.0),
+                                3: FixedColumnWidth(100.0),
+                              },
                               children: [
-                                tableRowItem(title: 'No', isHeader: true),
-                                tableRowItem(title: 'Nama', isHeader: true),
-                                tableRowItem(title: 'Qty', isHeader: true),
-                                tableRowItem(title: 'Harga', isHeader: true),
+                                TableRow(
+                                  decoration: BoxDecoration(
+                                      color: MyColors.tertiary,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  children: [
+                                    tableRowItem(title: 'No', isHeader: true),
+                                    tableRowItem(title: 'Nama', isHeader: true),
+                                    tableRowItem(title: 'Qty', isHeader: true),
+                                    tableRowItem(title: 'Harga', isHeader: true),
+                                  ],
+                                ),
+                                ...selectedItems.asMap().entries.map((entry) {
+                                  int index = entry.key;
+                                  var item = entry.value;
+                                  return TableRow(
+                                    children: [
+                                      tableRowItem(title: (index + 1).toString()),
+                                      tableRowItem(title: item['name']),
+                                      tableRowItem(
+                                          title: item['quantity'].toString()),
+                                      tableRowItem(title: 'Rp ${item['price']}'),
+                                    ],
+                                  );
+                                }).toList(),
                               ],
                             ),
-                            ...selectedItems.asMap().entries.map((entry) {
-                              int index = entry.key;
-                              var item = entry.value;
-                              return TableRow(
-                                children: [
-                                  tableRowItem(title: (index + 1).toString()),
-                                  tableRowItem(title: item['name']),
-                                  tableRowItem(
-                                      title: item['quantity'].toString()),
-                                  tableRowItem(title: 'Rp ${item['price']}'),
-                                ],
-                              );
-                            }).toList(),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  CashOrQris(
+                    title: 'QRIS',
+                    idTransaksi: 10000,
+                    totalTransaksi: totalTransaksi,
+                    selectedItems: selectedItems,
+                  ),
+                  CashOrQris(
+                    title: 'Tunai',
+                    idTransaksi: 10000,
+                    totalTransaksi: totalTransaksi,
+                    selectedItems: selectedItems,
+                  ),
+                ],
               ),
-              CashOrQris(
-                title: 'QRIS',
-                idTransaksi: 10000,
-                totalTransaksi: totalTransaksi,
-                selectedItems: selectedItems,
-              ),
-              CashOrQris(
-                title: 'Tunai',
-                idTransaksi: 10000,
-                totalTransaksi: totalTransaksi,
-                selectedItems: selectedItems,
-              ),
-            ],
-          ),
+            ),
+            if (isLoading) loadingWithBackdropFilter(),
+          ],
         ),
       ),
     );
@@ -138,6 +147,9 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
   }) {
     return GestureDetector(
       onTap: () async {
+        setState(() {
+          isLoading = true;
+        });
         if (title == 'QRIS') {
           int? trxId = await transactionViewModel.createTrx(
               Transaction(
@@ -149,28 +161,35 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
               ),
               selectedItems
                   .map<TransactionItem>((e) => TransactionItem(
-                        ProductId: e['productId'],
-                        Quantity: e['quantity'],
-                        Price: e['price'].toInt(),
-                      ))
+                ProductId: e['productId'],
+                Quantity: e['quantity'],
+                Price: e['price'].toInt(),
+              ))
                   .toList());
-          try{
-            RespPayment respPayment =
-            await transactionViewModel.createPaymentQris(RequestTransaction(
+          try {
+            RespPayment respPayment = await transactionViewModel.createPaymentQris(RequestTransaction(
               orderId: trxId!,
               expiredMintute: 5,
               amount: totalTransaksi,
             ));
             Navigator.pushNamed(context, RoutesName.qrisPayment, arguments: {
               'webhook_url': respPayment.webhookUrl,
+              'trxId': trxId,
             });
-          }catch(e){
+          } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Terjadi kesalahan saat membuat pembayaran')),
             );
+          } finally {
+            setState(() {
+              isLoading = false;
+            });
           }
         }
         if (title == 'Tunai') {
+          setState(() {
+            isLoading = false;
+          });
           Navigator.pushNamed(context, RoutesName.cashPayment, arguments: {
             'totalTransaksi': totalTransaksi,
             'selectedItems': selectedItems,
@@ -224,6 +243,17 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
         fontFamily: 'Montserrat',
         fontSize: 14,
         fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+
+  Widget loadingWithBackdropFilter() {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: const Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(MyColors.primary),
+        ),
       ),
     );
   }

@@ -118,7 +118,9 @@ class PrinterViewModel {
   void printTest() {
     if (_isConnected) {
       printer!.printNewLine();
-      printer!.printCustom('Hello World', 3, 1);
+      printer!.printCustom('POS PORTAL', 1, 1);
+      printer!.printNewLine();
+      printer!.printCustom('Device Connected', 1, 1);
       printer!.paperCut();
     }
   }
