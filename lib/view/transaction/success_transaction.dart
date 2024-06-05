@@ -112,21 +112,24 @@ class _SuccessPaymentState extends State<SuccessPayment> {
                         children: <TextSpan>[
                           TextSpan(
                               text: transaction?.id.toString(),
-                              style: const TextStyle(fontWeight: FontWeight.bold)),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
                     const SizedBox(height: 16),
                     Container(
                       width: MediaQuery.of(context).size.width * 0.6,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: MyColors.primary,
                       ),
                       child: Column(
                         children: [
-                          Text('Metode Pembayaran : ${convertPaymentMethod(transaction!.paymentMethod.toString())}',
+                          Text(
+                            'Metode Pembayaran : ${convertPaymentMethod(transaction!.paymentMethod.toString())}',
                             style: const TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 12,
@@ -158,6 +161,7 @@ class _SuccessPaymentState extends State<SuccessPayment> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   FloatingButtonDefault(
+                    isOutlineTransparent: true,
                     title: 'Cetak Struk',
                     actionPressed: () {
                       printerViewModel.printReceipt(
@@ -168,6 +172,7 @@ class _SuccessPaymentState extends State<SuccessPayment> {
                     heroTag: 'cetakStruk',
                   ),
                   FloatingButtonDefault(
+                    isTransparent: true,
                     title: 'Selesai',
                     actionPressed: () {
                       Navigator.pushNamed(context, RoutesName.home);
