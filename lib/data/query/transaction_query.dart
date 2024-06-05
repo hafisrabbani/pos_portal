@@ -34,7 +34,6 @@ class TransactionQuery {
           ? 1
           : ((data.status == TransactionStatusType.failed) ? 2 : 0);
       trxData['payment_method'] = data.paymentMethod.toString().split('.').last;
-      print(data.paymentMethod.toString().split('.').last);
 
       return await db.transaction((txn) async {
         int trxId = await txn.insert('Transaction_Record', trxData);

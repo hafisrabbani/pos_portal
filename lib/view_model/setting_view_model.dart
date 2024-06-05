@@ -1,3 +1,4 @@
+import 'package:pos_portal/data/hooks/health_api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingViewModel {
@@ -49,5 +50,12 @@ class SettingViewModel {
   Future<bool?> setWebHook(String webHook) async {
     await _ensureInitialized();
     return await _prefs?.setString(_webHookKey, webHook);
+  }
+
+  Future<bool> checkConnectionWebhook(String injectedUrl) async {
+    final HealthApiService healthApiService = HealthApiService();
+    final bool isConnected = await healthApiService.checkConnection(injectedUrl: injectedUrl);
+
+    return isConnected;
   }
 }

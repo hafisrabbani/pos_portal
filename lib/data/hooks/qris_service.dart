@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:pos_portal/model/api/resp_transaction.dart';
 import 'package:pos_portal/model/api/transaction.dart';
+import 'package:pos_portal/model/api/webhook.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -56,6 +57,27 @@ class QrisService {
       }
     } else {
       throw Exception('Failed to create transaction');
+    }
+  }
+
+  Future<Webhook> getWebhook(int orderId) async {
+    await _initCompleter.future;
+    if (url == null) {
+      throw Exception('Webhook URL is not set');
+    }
+
+    final response = await http.get(
+      Uri.parse('$url/payment/get-status-payment?order_id=$orderId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print('query webhook: ${url}/payment/get-status-payment?order_id=$orderId');
+    print('result webhooksss: ${response.body}');
+    if (response.statusCode == 200) {
+      return Webhook.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to get webhook');
     }
   }
 }

@@ -64,7 +64,7 @@ void showCustomSnackbar({
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
+                  width: MediaQuery.of(context).size.width * 0.5,
                   child: Text(
                     title,
                     style: const TextStyle(
@@ -76,7 +76,7 @@ void showCustomSnackbar({
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.75,
+                  width: MediaQuery.of(context).size.width * 0.5,
                   child: Text(
                     message,
                     style: const TextStyle(

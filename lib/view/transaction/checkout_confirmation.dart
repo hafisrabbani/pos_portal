@@ -107,7 +107,6 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                           ],
                         ),
                       ),
-                      CopyIdClipboard(transactionId: 12321321)
                     ],
                   ),
                 ),
@@ -155,17 +154,21 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                         Price: e['price'].toInt(),
                       ))
                   .toList());
-
-          RespPayment respPayment =
-              await transactionViewModel.createPaymentQris(RequestTransaction(
-            orderId: trxId!,
-            expiredMintute: 5,
-            amount: totalTransaksi,
-          ));
-          print(respPayment.webhookUrl);
-          Navigator.pushNamed(context, RoutesName.qrisPayment, arguments: {
-            'webhook_url': respPayment.webhookUrl,
-          });
+          try{
+            RespPayment respPayment =
+            await transactionViewModel.createPaymentQris(RequestTransaction(
+              orderId: trxId!,
+              expiredMintute: 5,
+              amount: totalTransaksi,
+            ));
+            Navigator.pushNamed(context, RoutesName.qrisPayment, arguments: {
+              'webhook_url': respPayment.webhookUrl,
+            });
+          }catch(e){
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Terjadi kesalahan saat membuat pembayaran')),
+            );
+          }
         }
         if (title == 'Tunai') {
           Navigator.pushNamed(context, RoutesName.cashPayment, arguments: {
