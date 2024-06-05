@@ -6,6 +6,7 @@ import 'package:pos_portal/view/intro_screen/onboarding.dart';
 import 'package:pos_portal/view/intro_screen/splash_screen.dart';
 import 'package:pos_portal/view/new_product/product_action.dart';
 import 'package:pos_portal/view/product/product_action.dart';
+import 'package:pos_portal/view/setting/backup_restore_page.dart';
 import 'package:pos_portal/view/setting/edit_struk_page.dart';
 import 'package:pos_portal/view/setting/setting_page.dart';
 import 'package:pos_portal/view/setting/setting_printer.dart';
@@ -70,6 +71,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => const EditStruk());
       case RoutesName.settingPrinter:
         return MaterialPageRoute(builder: (_) => const SettingPrinter());
+      case RoutesName.backupRestore:
+        return MaterialPageRoute(builder: (_) => const BackupRestorePage());
       case RoutesName.settingWebHook:
         return MaterialPageRoute(builder: (_) => const WebHookPage());
       default:
