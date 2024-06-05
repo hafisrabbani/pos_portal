@@ -1,4 +1,5 @@
 import 'package:pos_portal/config/db_config.dart';
+import 'package:pos_portal/data/type/chart_type.dart';
 import 'package:pos_portal/data/type/transaction_status_type.dart';
 import 'package:pos_portal/model/product.dart';
 import 'package:pos_portal/model/transaction.dart';
@@ -147,4 +148,103 @@ class TransactionQuery {
     ''');
     return result.first['trx_count'];
   }
+
+  // Future<List<String>> getStatisticTrx(ChartType type) async {
+  //   final db = await _dbConfig.database;
+  //   List<Map<String, dynamic>> result = [];
+  //   switch (type) {
+  //     case ChartType.weekly:
+  //       result = await db.rawQuery('''
+  //       SELECT strftime('%W', tr.created_time) as week, COUNT(*) as trx_count
+  //       FROM Transaction_Record tr
+  //       GROUP BY week
+  //       ORDER BY week
+  //     ''');
+  //       break;
+  //     case ChartType.monthly:
+  //       result = await db.rawQuery('''
+  //       SELECT strftime('%m', tr.created_time) as month, COUNT(*) as trx_count
+  //       FROM Transaction_Record tr
+  //       GROUP BY month
+  //       ORDER BY month
+  //     ''');
+  //       break;
+  //     case ChartType.yearly:
+  //       result = await db.rawQuery('''
+  //       SELECT strftime('%Y', tr.created_time) as year, COUNT(*) as trx_count
+  //       FROM Transaction_Record tr
+  //       GROUP BY year
+  //       ORDER BY year
+  //     ''');
+  //       break;
+  //     default:
+  //       result = [];
+  //       break;
+  //   }
+  //   print('Hasil Statistik: $result');
+  //   return result.map((data) => data.toString()).toList();
+  // }
+
+  Future<List<int>> getStatisticTrx(ChartType type) async {
+    final db = await _dbConfig.database;
+    List<Map<String, dynamic>> queryResult = [];
+    List<int> result = [];
+
+    switch (type) {
+      case ChartType.weekly:
+        queryResult = await db.rawQuery('''
+        SELECT strftime('%w', tr.created_time) as day_of_week, COUNT(*) as trx_count
+        FROM Transaction_Record tr
+        WHERE tr.created_time >= date('now', '-6 days')
+        GROUP BY day_of_week
+        ORDER BY day_of_week
+      ''');
+        result = _mapWeeklyResultToExpectedFormat(queryResult);
+        break;
+      case ChartType.monthly:
+        queryResult = await db.rawQuery('''
+        SELECT strftime('%m', tr.created_time) as month, COUNT(*) as trx_count
+        FROM Transaction_Record tr
+        GROUP BY month
+        ORDER BY month
+      ''');
+        result = _mapResultToExpectedFormat(queryResult, 12, 'month');
+        break;
+      case ChartType.yearly:
+        queryResult = await db.rawQuery('''
+        SELECT strftime('%Y', tr.created_time) as year, COUNT(*) as trx_count
+        FROM Transaction_Record tr
+        GROUP BY year
+        ORDER BY year
+      ''');
+        result = queryResult.map((e) => e['trx_count'] as int).toList();
+        break;
+      default:
+        result = [];
+        break;
+    }
+
+    return result;
+  }
+
+  List<int> _mapWeeklyResultToExpectedFormat(List<Map<String, dynamic>> queryResult) {
+    List<int> result = List.filled(7, 0); // Initialize with zeros for 7 days
+    for (var entry in queryResult) {
+      int dayOfWeek = int.parse(entry['day_of_week']);
+      result[dayOfWeek] = entry['trx_count'] as int;
+    }
+    return result;
+  }
+
+  List<int> _mapResultToExpectedFormat(List<Map<String, dynamic>> queryResult, int periods, String periodKey) {
+    List<int> result = List.filled(periods, 0); // Initialize with zeros
+    for (var entry in queryResult) {
+      int periodIndex = int.parse(entry[periodKey]);
+      if (periodKey == 'month') periodIndex -= 1; // Adjust for zero-based index in months
+      result[periodIndex] = entry['trx_count'] as int;
+    }
+    return result;
+  }
+
+
 }
