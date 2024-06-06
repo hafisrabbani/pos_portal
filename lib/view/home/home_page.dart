@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CardWallet(omzet: _omzet),
-                CardInfo(),
+                // CardInfo(),
                 CardMenu(infoProduct: _infoProduct),
                 SegmentedControl(onValueChanged: _onSegmentChanged),
                 GestureDetector(

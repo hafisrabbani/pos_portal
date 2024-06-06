@@ -47,7 +47,6 @@ class _NewProductPageState extends State<NewProductPage>
     });
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -110,56 +109,57 @@ class _NewProductPageState extends State<NewProductPage>
       appBar: topBar(context: context, title: 'Produk', isCanBack: false),
       body: Column(
         children: [
-          isShowSearch ? Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    isShowSearch = false;
-                    _searchController.clear();
-                    _handleTabSelection();
-                  });
-                },
-                icon: const Icon(Icons.arrow_back),
-              ),
-              Expanded(
-                child:
-                  TextField(
-                    controller: _searchController,
-                    onChanged: (value) {
-                      filterProduct(value);
-                    },
-                    decoration: const InputDecoration(
-                      hintText: 'Cari produk',
-                      border: InputBorder.none,
+          isShowSearch
+              ? Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isShowSearch = false;
+                          _searchController.clear();
+                          _handleTabSelection();
+                        });
+                      },
+                      icon: const Icon(Icons.arrow_back),
                     ),
-                  ),
-              ),
-            ],
-          ) : Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    isShowSearch = true;
-                  });
-                },
-                icon: const Icon(Icons.search),
-              ),
-              Expanded(
-                child: TabBar(
-                  controller: _tabController,
-                  tabs: tabs,
-                  indicatorColor: MyColors.primary,
-                  labelStyle: TextStyle(
-                    color: MyColors.primary,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w500,
-                  ),
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: (value) {
+                          filterProduct(value);
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Cari produk',
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isShowSearch = true;
+                        });
+                      },
+                      icon: const Icon(Icons.search),
+                    ),
+                    Expanded(
+                      child: TabBar(
+                        controller: _tabController,
+                        tabs: tabs,
+                        indicatorColor: MyColors.primary,
+                        labelStyle: TextStyle(
+                          color: MyColors.primary,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
           Expanded(
             child: TabBarView(
               controller: _tabController,
@@ -196,7 +196,7 @@ class _NewProductPageState extends State<NewProductPage>
           content: 'Apakah Anda yakin ingin menghapus produk ini?',
           onConfirm: () async {
             bool isSuccess =
-            await _newProductViewModel.deleteProduct(idProduct);
+                await _newProductViewModel.deleteProduct(idProduct);
             if (isSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -229,24 +229,22 @@ class _NewProductPageState extends State<NewProductPage>
       child: Column(
         children: products.isNotEmpty
             ? [
-          ...products
-              .asMap()
-              .entries
-              .map((entry) {
-            final index = entry.key;
-            final product = entry.value;
-            return GestureDetector(
-              onLongPress: () {
-                _showConfirmDeleteDialog(product.id!);
-              },
-              child: NewCardProducts(
-                product: product,
-                isBestSeller: isBestSellerTab, index: index,
-              ), // Tambahkan kurung kurawal penutup di sini
-            );
-          }).toList(),
-          const SizedBox(height: 100),
-        ]
+                ...products.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final product = entry.value;
+                  return GestureDetector(
+                    onLongPress: () {
+                      _showConfirmDeleteDialog(product.id!);
+                    },
+                    child: NewCardProducts(
+                      product: product,
+                      isBestSeller: isBestSellerTab,
+                      index: index,
+                    ), // Tambahkan kurung kurawal penutup di sini
+                  );
+                }).toList(),
+                const SizedBox(height: 100),
+              ]
             : [
                 const Center(
                   child: Padding(

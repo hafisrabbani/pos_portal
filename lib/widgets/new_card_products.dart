@@ -65,13 +65,13 @@ class _NewCardProductsState extends State<NewCardProducts> {
                       fontSize: 14,
                     ),
                   ),
-                  SizedBox(height: 4.0), // Adjust the height value as needed
+                  SizedBox(height: 10), // Adjust the height value as needed
                   Text(
                     'Rp ' + formatRupiah(product.price.toInt()),
                     style: const TextStyle(
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w700,
-                      fontSize: 14,
+                      fontSize: 12,
                       color: MyColors.primary,
                     ),
                   ),
@@ -133,9 +133,9 @@ class _NewCardProductsState extends State<NewCardProducts> {
             height: 25,
             width: 25,
           ),
-          SizedBox(width: 5,),
+          SizedBox(width: 5),
           Text(
-            (product.stockType == 0) ? 'Stock tidak terbatas' : 'Stock Sisa '+ product.stock.toString(),
+            (product.stockType == 0) ? 'Unlimited' : 'Stock : '+ product.stock.toString(),
             style: TextStyle(
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.w500,
