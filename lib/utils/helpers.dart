@@ -38,3 +38,14 @@ String convertPaymentMethod(String paymentMethod) {
     return 'Tunai';
   }
 }
+
+
+int getMaxValue(List<int> list) {
+  int max = 0;
+  list.forEach((element) {
+    if (element > max) {
+      max = element;
+    }
+  });
+  return max;
+}

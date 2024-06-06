@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CardWallet(),
+                CardWallet(omzet: _omzet),
                 CardInfo(),
                 CardMenu(infoProduct: _infoProduct),
                 SegmentedControl(onValueChanged: _onSegmentChanged),
@@ -82,6 +82,9 @@ class _HomePageState extends State<HomePage> {
                       selectedSegment: _selectedSegment,
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: 70,
                 ),
               ],
             ),

@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_portal/routes/route_name.dart';
 import 'package:pos_portal/view/app/app_template.dart';
+import 'package:pos_portal/view/intro_screen/onboarding.dart';
+import 'package:pos_portal/view/intro_screen/splash_screen.dart';
 import 'package:pos_portal/view/new_product/product_action.dart';
 import 'package:pos_portal/view/product/product_action.dart';
+import 'package:pos_portal/view/setting/backup_restore_page.dart';
 import 'package:pos_portal/view/setting/edit_struk_page.dart';
 import 'package:pos_portal/view/setting/setting_page.dart';
 import 'package:pos_portal/view/setting/setting_printer.dart';
@@ -26,7 +29,9 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RoutesName.ROOT:
-        return MaterialPageRoute(builder: (_) => const AppTemplate());
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
+      case RoutesName.onboarding:
+        return MaterialPageRoute(builder: (_) => const OnBoardingPage());
       case RoutesName.home:
         _viewModel.saveSelectedIndex(0);
         return MaterialPageRoute(builder: (_) => const AppTemplate());
@@ -34,7 +39,8 @@ class Routes {
         _viewModel.saveSelectedIndex(1);
         return MaterialPageRoute(builder: (_) => const AppTemplate());
       case RoutesName.productAction:
-        return MaterialPageRoute(builder: (_) => const NewProductAction(), settings: settings);
+        return MaterialPageRoute(
+            builder: (_) => const NewProductAction(), settings: settings);
       case RoutesName.transaction:
         _viewModel.saveSelectedIndex(2);
         return MaterialPageRoute(builder: (_) => const AppTemplate());
@@ -44,21 +50,29 @@ class Routes {
       case RoutesName.newTransaction:
         return MaterialPageRoute(builder: (_) => const NewTransactionPage());
       case RoutesName.transactionConfirm:
-        return MaterialPageRoute(builder: (_) => const PaymentMethodPage(), settings: settings);
+        return MaterialPageRoute(
+            builder: (_) => const PaymentMethodPage(), settings: settings);
       case RoutesName.cashPayment:
-        return MaterialPageRoute(builder: (_) => const CashPayment(), settings: settings);
+        return MaterialPageRoute(
+            builder: (_) => const CashPayment(), settings: settings);
       case RoutesName.qrisPayment:
-        return MaterialPageRoute(builder: (_) => const QrisPayment(), settings: settings);
+        return MaterialPageRoute(
+            builder: (_) => const QrisPayment(), settings: settings);
       case RoutesName.successPayment:
-        return MaterialPageRoute(builder: (_) => const SuccessPayment(), settings: settings);
+        return MaterialPageRoute(
+            builder: (_) => const SuccessPayment(), settings: settings);
       case RoutesName.failedPayment:
-        return MaterialPageRoute(builder: (_) => const FailedTransaction(), settings: settings);
+        return MaterialPageRoute(
+            builder: (_) => const FailedTransaction(), settings: settings);
       case RoutesName.transactionDetail:
-        return MaterialPageRoute(builder: (_) => const HistoryTransaction(), settings: settings);
+        return MaterialPageRoute(
+            builder: (_) => const HistoryTransaction(), settings: settings);
       case RoutesName.settingStruk:
         return MaterialPageRoute(builder: (_) => const EditStruk());
       case RoutesName.settingPrinter:
         return MaterialPageRoute(builder: (_) => const SettingPrinter());
+      case RoutesName.backupRestore:
+        return MaterialPageRoute(builder: (_) => const BackupRestorePage());
       case RoutesName.settingWebHook:
         return MaterialPageRoute(builder: (_) => const WebHookPage());
       default:

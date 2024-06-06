@@ -147,7 +147,6 @@
 //
 //
 
-
 import 'package:flutter/material.dart';
 import 'package:pos_portal/data/type/product_type.dart';
 import 'package:pos_portal/utils/colors.dart';
@@ -178,11 +177,9 @@ class _CardListState extends State<CardList> {
     await _productViewModel.loadProducts(ProductType.all);
     setState(() {
       isClickedList = List.generate(
-          _productViewModel.productsNotifier.value.length,
-          (index) => false);
+          _productViewModel.productsNotifier.value.length, (index) => false);
       itemQuantities = List.generate(
-          _productViewModel.productsNotifier.value.length,
-          (index) => 1);
+          _productViewModel.productsNotifier.value.length, (index) => 1);
     });
   }
 
@@ -197,7 +194,8 @@ class _CardListState extends State<CardList> {
     double totalAmount = 0;
     for (int i = 0; i < isClickedList.length; i++) {
       if (isClickedList[i]) {
-        totalAmount += (_productViewModel.productsNotifier.value[i].price) * itemQuantities[i];
+        totalAmount += (_productViewModel.productsNotifier.value[i].price) *
+            itemQuantities[i];
         selectedItems.add({
           'productId': _productViewModel.productsNotifier.value[i].id!,
           'name': _productViewModel.productsNotifier.value[i].name,
@@ -240,52 +238,67 @@ class _CardListState extends State<CardList> {
                   });
                 },
                 child: ListTile(
-                  title: Text(
-                    item.name,
-                    style: const TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      Text(
-                        'Rp ${formatRupiah(item.price.toInt())}',
-                        style: const TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                          color: MyColors.primary,
-                        ),
+                  subtitle: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.name,
+                            style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text(
+                            'Rp ${formatRupiah(item.price.toInt())}',
+                            style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: MyColors.primary,
+                            ),
+                          ),
+                        ],
                       ),
                       Text(
-                        'Stock: ${(item.stockType == 0) ? 'Unlimited' : item.stock}',
-                        style: const TextStyle(
+                        item.stockType == 0
+                            ? 'Tidak terbatas'
+                            : 'Stok: ${item.stock.toString()}',
+                        style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.w500,
-                          fontSize: 10,
-                          color: MyColors.warning,
+                          fontSize: 11,
+                          color: item.stockType == 0
+                              ? MyColors.success
+                              : (item.stock! <= 10)
+                                  ? ((item.stock! <= 5)
+                                      ? MyColors.error
+                                      : MyColors.warning)
+                                  : MyColors.success,
                         ),
                       ),
-                    ]
+                    ],
                   ),
                   trailing: isClickedList[index]
                       ? SizedBox(
-                    width: 100,
-                    child: Counter(
-                      max: (item.stockType == 0) ? null : item.stock,
-                      initialValue: itemQuantities[index],
-                      onChanged: (value) {
-                        setState(() {
-                          itemQuantities[index] = value; // This line seems to be causing the issue
-                          updateSelectedCount();
-                        });
-                      },
-                    ),
-                  )
-                      : const SizedBox(),
+                          width: 100,
+                          child: Counter(
+                            max: (item.stockType == 0) ? null : item.stock,
+                            initialValue: itemQuantities[index],
+                            onChanged: (value) {
+                              setState(() {
+                                itemQuantities[index] =
+                                    value; // This line seems to be causing the issue
+                                updateSelectedCount();
+                              });
+                            },
+                          ),
+                        )
+                      : null,
                 ),
               ),
             ),

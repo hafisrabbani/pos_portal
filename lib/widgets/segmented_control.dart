@@ -23,9 +23,6 @@ class SegmentedControl extends StatelessWidget {
         2: Text('Bulan',
             style: TextStyle(
                 fontFamily: 'Montserrat', fontWeight: FontWeight.w600)),
-        3: Text('Tahun',
-            style: TextStyle(
-                fontFamily: 'Montserrat', fontWeight: FontWeight.w600)),
       },
       decoration: BoxDecoration(
         color: MyColors.tertiary,
@@ -38,7 +35,7 @@ class SegmentedControl extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withOpacity(.25),
             blurRadius: 4.0,
-            offset: Offset(
+            offset: const Offset(
               0.0,
               2.0,
             ),

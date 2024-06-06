@@ -26,7 +26,7 @@ AppBar topBar(
               }
             },
           )
-        : null,
+        : SizedBox(),
     title: Text(
       title,
       style: const TextStyle(

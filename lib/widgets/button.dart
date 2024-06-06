@@ -5,9 +5,9 @@ import 'package:pos_portal/utils/colors.dart';
 class ButtonDefault extends StatelessWidget {
   final String title;
   final bool isFilled;
-  final bool isNeedSvg;
+  final bool isNeedIcon;
   final bool isDisabled;
-  String? svgPath;
+  final Widget? icon;
   final VoidCallback onPressed;
 
   ButtonDefault({
@@ -15,9 +15,9 @@ class ButtonDefault extends StatelessWidget {
     required this.title,
     this.isFilled = false,
     required this.onPressed,
-    this.isNeedSvg = false,
-    this.svgPath,
+    this.isNeedIcon = false,
     this.isDisabled = false,
+    this.icon,
   });
 
   @override
@@ -42,12 +42,12 @@ class ButtonDefault extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          isNeedSvg
+          isNeedIcon
               ? Container(
                   margin: EdgeInsets.only(right: 4),
                   child: AspectRatio(
                     aspectRatio: 0.25,
-                    child: SvgPicture.asset(svgPath ?? ''),
+                    child: SizedBox(width: 24, height: 24, child: icon ?? null),
                   ),
                 )
               : SizedBox(), // Add this line

@@ -7,6 +7,7 @@ import 'package:pos_portal/utils/colors.dart';
 import 'package:pos_portal/view_model/new_product_view_model.dart';
 import 'package:pos_portal/widgets/button.dart';
 import 'package:pos_portal/widgets/custom_dialog.dart';
+import 'package:pos_portal/widgets/custom_text_field.dart';
 import 'package:pos_portal/widgets/floating_button.dart';
 import 'package:pos_portal/widgets/card_action.dart';
 import 'package:pos_portal/widgets/new_card_products.dart';
@@ -33,6 +34,19 @@ class _NewProductPageState extends State<NewProductPage>
   List<Product> products = [];
   List<Product> almostOutOfStockProducts = [];
   List<Product> bestSellerProducts = [];
+  bool isShowSearch = false;
+  final TextEditingController _searchController = TextEditingController();
+
+  void filterProduct(String query) {
+    final List<Product> filteredProducts = products
+        .where((product) =>
+            product.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    setState(() {
+      products = filteredProducts;
+    });
+  }
+
 
   @override
   void initState() {
@@ -93,16 +107,43 @@ class _NewProductPageState extends State<NewProductPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(
-        context: context,
-        title: 'Produk',
-      ),
+      appBar: topBar(context: context, title: 'Produk', isCanBack: false),
       body: Column(
         children: [
-          Row(
+          isShowSearch ? Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    isShowSearch = false;
+                    _searchController.clear();
+                    _handleTabSelection();
+                  });
+                },
+                icon: const Icon(Icons.arrow_back),
+              ),
+              Expanded(
+                child:
+                  TextField(
+                    controller: _searchController,
+                    onChanged: (value) {
+                      filterProduct(value);
+                    },
+                    decoration: const InputDecoration(
+                      hintText: 'Cari produk',
+                      border: InputBorder.none,
+                    ),
+                  ),
+              ),
+            ],
+          ) : Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    isShowSearch = true;
+                  });
+                },
                 icon: const Icon(Icons.search),
               ),
               Expanded(
@@ -207,13 +248,13 @@ class _NewProductPageState extends State<NewProductPage>
           const SizedBox(height: 100),
         ]
             : [
-          const Center(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text('Tidak ada produk'),
-            ),
-          ),
-        ],
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text('Tidak ada produk'),
+                  ),
+                ),
+              ],
       ),
     );
   }

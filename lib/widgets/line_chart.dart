@@ -1,16 +1,24 @@
+import 'dart:ffi';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pos_portal/data/type/chart_type.dart';
 import 'package:pos_portal/utils/colors.dart';
+import 'package:pos_portal/utils/helpers.dart';
+import 'package:pos_portal/view_model/homepage_view_model.dart';
 
 class LineChartWidget extends StatefulWidget {
   final int selectedSegment;
+
   const LineChartWidget({
     super.key,
     required this.selectedSegment,
   });
+
   List<String> get harian =>
       const ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+
   List<String> get bulanan => const [
         'Januari',
         'Februari',
@@ -31,144 +39,157 @@ class LineChartWidget extends StatefulWidget {
 }
 
 class _LineChartWidgetState extends State<LineChartWidget> {
+  final HomepageViewModel homepageViewModel = HomepageViewModel();
+  List<FlSpot> statistik = [];
+  List<int> originalData = [];
+  int maxData = 100;
+  bool isLoading = true;
+
+  void loadStatistik() async {
+    var data = await homepageViewModel.getStatisticTrx(
+        widget.selectedSegment == 1 ? ChartType.weekly : ChartType.monthly);
+
+    if(!mounted) return;
+
+    setState(() {
+      originalData = data;
+      maxData = getMaxValue(data);
+      statistik = List<FlSpot>.from(data
+          .asMap()
+          .entries
+          .map((e) => FlSpot(e.key.toDouble(), e.value.toDouble())));
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadStatistik();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 16),
-      child: Container(
-        height: 250,
-        child: LineChart(LineChartData(
-          titlesData: FlTitlesData(
-            show: true,
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 30,
-                getTitlesWidget:
-                    widget.selectedSegment == 1 ? titleHarian : titleBulanan,
-                interval: 1,
-              ),
-            ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: leftTitleWidgets,
-                reservedSize: 42,
-                interval: 1,
-              ),
-            ),
-            topTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            rightTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-          ),
-          minX: 0,
-          maxX: (widget.selectedSegment == 1)
-              ? widget.harian.length.toDouble() - 1
-              : widget.bulanan.length.toDouble() - 1,
-          minY: 0,
-          maxY: 250,
-          borderData: FlBorderData(show: false),
-          gridData: FlGridData(
-            show: false,
-          ),
-          lineTouchData: LineTouchData(
-            touchSpotThreshold: 30,
-            touchTooltipData: LineTouchTooltipData(
-              getTooltipColor: (touchedSpot) => Colors.white,
-              getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-                return touchedBarSpots.map((barSpot) {
-                  final flSpot = barSpot;
-
-                  TextAlign textAlign;
-                  switch (flSpot.x.toInt()) {
-                    case 1:
-                      textAlign = TextAlign.left;
-                      break;
-                    case 5:
-                      textAlign = TextAlign.right;
-                      break;
-                    default:
-                      textAlign = TextAlign.center;
-                  }
-
-                  return LineTooltipItem(
-                    '${flSpot.y.toString()}00 \n',
-                    TextStyle(
-                        color: MyColors.primary,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Montserrat'),
-                    children: [
-                      TextSpan(
-                        text: (widget.selectedSegment == 1)
-                            ? widget.harian[flSpot.x.toInt()]
-                            : widget.bulanan[flSpot.x.toInt()],
-                        style: TextStyle(
-                            color: MyColors.primary,
-                            fontSize: 11,
-                            fontFamily: 'Montserrat'),
-                      ),
-                    ],
-                    textAlign: textAlign,
-                  );
-                }).toList();
-              },
-            ),
-          ),
-          lineBarsData: [
-            LineChartBarData(
-              spots: (widget.selectedSegment == 1)
-                  ? [
-                      FlSpot(0, 10),
-                      FlSpot(1, 250),
-                      FlSpot(2, 120),
-                      FlSpot(3, 100),
-                      FlSpot(4, 50),
-                      FlSpot(5, 75),
-                      FlSpot(6, 95),
-                    ]
-                  : [
-                      FlSpot(0, 10),
-                      FlSpot(1, 120),
-                      FlSpot(2, 30),
-                      FlSpot(3, 100),
-                      FlSpot(4, 50),
-                      FlSpot(5, 10),
-                      FlSpot(6, 70),
-                      FlSpot(7, 80),
-                      FlSpot(8, 110),
-                      FlSpot(9, 100),
-                      FlSpot(10, 110),
-                      FlSpot(11, 70),
-                    ],
-              isCurved: true,
+    return isLoading
+        ? Center(
+            child: CircularProgressIndicator(
               color: MyColors.primary,
-              barWidth: 3,
-              isStrokeCapRound: true,
-              belowBarData: BarAreaData(
-                  show: true,
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        MyColors.primary.withOpacity(0.3),
-                        MyColors.primary.withOpacity(0)
-                      ])),
-              dotData: FlDotData(
-                  show: true,
-                  getDotPainter: (spot, percent, barData, index) =>
-                      FlDotCirclePainter(
-                          radius: 4,
-                          color: MyColors.primary,
-                          strokeWidth: 3,
-                          strokeColor: Colors.white)),
             ),
-          ],
-        )),
-      ),
-    );
+          )
+        : Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Container(
+              height: 250,
+              child: LineChart(LineChartData(
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 30,
+                      getTitlesWidget: widget.selectedSegment == 1
+                          ? titleHarian
+                          : titleBulanan,
+                      interval: 1,
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: leftTitleWidgets,
+                      reservedSize: 42,
+                      interval: 1,
+                    ),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                minX: 0,
+                maxX: (widget.selectedSegment == 1)
+                    ? widget.harian.length.toDouble() - 1
+                    : widget.bulanan.length.toDouble() - 1,
+                minY: 0,
+                maxY: maxData.toDouble(),
+                borderData: FlBorderData(show: false),
+                gridData: FlGridData(
+                  show: false,
+                ),
+                lineTouchData: LineTouchData(
+                  touchSpotThreshold: 30,
+                  touchTooltipData: LineTouchTooltipData(
+                    getTooltipColor: (touchedSpot) => Colors.white,
+                    getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                      return touchedBarSpots.map((barSpot) {
+                        final flSpot = barSpot;
+
+                        TextAlign textAlign;
+                        switch (flSpot.x.toInt()) {
+                          case 1:
+                            textAlign = TextAlign.left;
+                            break;
+                          case 5:
+                            textAlign = TextAlign.right;
+                            break;
+                          default:
+                            textAlign = TextAlign.center;
+                        }
+
+                        return LineTooltipItem(
+                          '${flSpot.y.toInt().toString()} \n',
+                          const TextStyle(
+                              color: MyColors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Montserrat'),
+                          children: [
+                            TextSpan(
+                              text: (widget.selectedSegment == 1)
+                                  ? widget.harian[flSpot.x.toInt()]
+                                  : widget.bulanan[flSpot.x.toInt()],
+                              style: const TextStyle(
+                                  color: MyColors.primary,
+                                  fontSize: 11,
+                                  fontFamily: 'Montserrat'),
+                            ),
+                          ],
+                          textAlign: textAlign,
+                        );
+                      }).toList();
+                    },
+                  ),
+                ),
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: statistik,
+                    isCurved: true,
+                    color: MyColors.primary,
+                    barWidth: 3,
+                    isStrokeCapRound: true,
+                    belowBarData: BarAreaData(
+                        show: true,
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              MyColors.primary.withOpacity(0.3),
+                              MyColors.primary.withOpacity(0)
+                            ])),
+                    dotData: FlDotData(
+                        show: true,
+                        getDotPainter: (spot, percent, barData, index) =>
+                            FlDotCirclePainter(
+                                radius: 4,
+                                color: MyColors.primary,
+                                strokeWidth: 3,
+                                strokeColor: Colors.white)),
+                  ),
+                ],
+              )),
+            ),
+          );
   }
 }
 
@@ -179,18 +200,12 @@ Widget leftTitleWidgets(double value, TitleMeta meta) {
     color: MyColors.neutral,
   );
   String text;
-  switch (value.toInt()) {
-    case 50:
-      text = '50K';
-      break;
-    case 100:
-      text = '100k';
-      break;
-    case 150:
-      text = '150k';
-      break;
-    default:
-      return Container();
+  if (value.toInt() == 0) {
+    text = '0';
+  } else if (value.toInt() % 50 == 0) {
+    text = value.toInt().toString();
+  } else {
+    text = '';
   }
 
   return Text(text, style: style, textAlign: TextAlign.left);

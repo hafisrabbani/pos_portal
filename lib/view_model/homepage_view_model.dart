@@ -1,5 +1,6 @@
 import 'package:pos_portal/data/query/product_query.dart';
 import 'package:pos_portal/data/query/transaction_query.dart';
+import 'package:pos_portal/data/type/chart_type.dart';
 import 'package:pos_portal/data/type/product_type.dart';
 
 class HomepageViewModel {
@@ -19,6 +20,13 @@ class HomepageViewModel {
     return [almostOutOfStockCount.length, stockCount, transactionCount];
   }
 
+  Future<List<int>> getStatisticTrx(ChartType type) async {
+    final TransactionQuery transactionQuery = TransactionQuery();
+    final statistik = await transactionQuery.getStatisticTrx(type);
+    return statistik;
+  }
+
   void dispose() {
+    // Do nothing
   }
 }
