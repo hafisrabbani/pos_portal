@@ -63,7 +63,7 @@ class _BackupRestorePageState extends State<BackupRestorePage> {
               onPressed: (_manageExternalStoragePermissionGranted)
                   ? () async {
                       final dbFolder = await getDatabasesPath();
-                      File source1 = File('$dbFolder/pos_portal.db');
+                      File source1 = File('$dbFolder/pos.db');
 
                       Directory copyTo =
                           Directory("storage/emulated/0/POS Portal Backup");
@@ -88,7 +88,7 @@ class _BackupRestorePageState extends State<BackupRestorePage> {
                       showCustomSnackbar(
                           context: context,
                           title: 'Berhasil Backup Data',
-                          message: 'Data berhasil dibackup',
+                          message: 'Berhasil backup data ke $newPath',
                           theme: SnackbarTheme.success);
                     }
                   : () {
@@ -136,24 +136,22 @@ class _BackupRestorePageState extends State<BackupRestorePage> {
                 ),
                 onPressed: () async {
                   var databasesPath = await getDatabasesPath();
-                  var dbPath = join(databasesPath, 'pos_porta_backup.db');
+                  var dbPath = join(databasesPath, 'pos.db');
 
                   FilePickerResult? result =
                       await FilePicker.platform.pickFiles();
 
                   if (result != null) {
+                    // Replace the database with the new one
                     File source = File(result.files.single.path!);
                     await source.copy(dbPath);
-
-                    // Open the database
-                    Database database = await openDatabase(dbPath);
-
-                    // Query the database
-                    List<Map<String, dynamic>> maps =
-                        await database.query('gaero diisi opo iki');
-
-                    // Close the database
-                    await database.close();
+                    showCustomSnackbar(
+                        context: context,
+                        title: 'Berhasil Restore Data',
+                        message: 'Berhasil restore data dari ${result.files.single.path}',
+                        theme: SnackbarTheme.success);
+                  } else {
+                    // User canceled the picker
                   }
                   // User canceled the picker
                 },

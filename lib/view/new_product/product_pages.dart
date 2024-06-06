@@ -7,6 +7,7 @@ import 'package:pos_portal/utils/colors.dart';
 import 'package:pos_portal/view_model/new_product_view_model.dart';
 import 'package:pos_portal/widgets/button.dart';
 import 'package:pos_portal/widgets/custom_dialog.dart';
+import 'package:pos_portal/widgets/custom_text_field.dart';
 import 'package:pos_portal/widgets/floating_button.dart';
 import 'package:pos_portal/widgets/card_action.dart';
 import 'package:pos_portal/widgets/new_card_products.dart';
@@ -29,6 +30,18 @@ class _NewProductPageState extends State<NewProductPage>
   late TabController _tabController;
   final NewProductViewModel _newProductViewModel = NewProductViewModel();
   List<Product> products = [];
+  bool isShowSearch = false;
+  final TextEditingController _searchController = TextEditingController();
+
+  void filterProduct(String query) {
+    final List<Product> filteredProducts = products
+        .where((product) =>
+            product.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    setState(() {
+      products = filteredProducts;
+    });
+  }
 
   @override
   void initState() {
@@ -78,23 +91,42 @@ class _NewProductPageState extends State<NewProductPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: topBar(context: context, title: 'Produk', isCanBack: false),
-      // appBar: AppBar(
-      //   leading: SizedBox(),
-      //   title: const Text(
-      //     'Produk',
-      //     style: TextStyle(
-      //         fontFamily: 'Montserrat',
-      //         fontSize: 17,
-      //         fontWeight: FontWeight.w600),
-      //   ),
-      //   centerTitle: true,
-      // ),
       body: Column(
         children: [
-          Row(
+          isShowSearch ? Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    isShowSearch = false;
+                    _searchController.clear();
+                    _handleTabSelection();
+                  });
+                },
+                icon: const Icon(Icons.arrow_back),
+              ),
+              Expanded(
+                child:
+                  TextField(
+                    controller: _searchController,
+                    onChanged: (value) {
+                      filterProduct(value);
+                    },
+                    decoration: const InputDecoration(
+                      hintText: 'Cari produk',
+                      border: InputBorder.none,
+                    ),
+                  ),
+              ),
+            ],
+          ) : Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    isShowSearch = true;
+                  });
+                },
                 icon: const Icon(Icons.search),
               ),
               Expanded(
