@@ -18,14 +18,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void _init() async {
     final sharedPreferences = await SharedPreferences.getInstance();
     Future.delayed(const Duration(seconds: 3), () async {
-      Navigator.pushNamed(context, RoutesName.home);
+      Navigator.pushNamedAndRemoveUntil(context, RoutesName.home, (route) => false);
       final isFirst = sharedPreferences.getBool('isFirst') ?? true;
       debugPrint('isFirst: $isFirst');
       if (isFirst) {
         sharedPreferences.setBool('isFirst', false);
-        Navigator.pushNamed(context, RoutesName.onboarding);
+        Navigator.pushNamedAndRemoveUntil(context, RoutesName.onboarding, (route) => false);
       } else {
-        Navigator.pushNamed(context, RoutesName.home);
+        Navigator.pushNamedAndRemoveUntil(context, RoutesName.home, (route) => false);
       }
     });
   }
