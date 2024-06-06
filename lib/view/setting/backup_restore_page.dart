@@ -31,6 +31,141 @@ class _BackupRestorePageState extends State<BackupRestorePage> {
     });
   }
 
+  Future<void> _showConfirmationDialog(
+      BuildContext context, Function onConfirmed) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.warning_rounded,
+                color: MyColors.primary,
+                size: 120,
+              ),
+              Text(
+                'Konfirmasi pemulihan data',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    color: MyColors.primary,
+                    fontSize: 16),
+              ),
+            ],
+          ),
+          content: Text(
+            'Apakah kamu yakin ingin memulihkan data?\nSeluruh data yang ada akan terganti dengan data yang dipilih!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                fontSize: 12),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: ButtonStyle(),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Batal',
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                onConfirmed();
+              },
+              child: Text(
+                'Confirm',
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    color: MyColors.primary),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showFormatWarningDialog(
+      BuildContext context, Function onContinue) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.info_rounded,
+                color: MyColors.primary,
+                size: 80,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Peringatan Format File',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    color: MyColors.primary,
+                    fontSize: 16),
+              ),
+            ],
+          ),
+          content: Text(
+            'Pastikan memilih file dengan format .db',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                fontSize: 12),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: ButtonStyle(),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Batal',
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                onContinue();
+              },
+              child: Text(
+                'Lanjutkan',
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    color: MyColors.primary),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -135,25 +270,36 @@ class _BackupRestorePageState extends State<BackupRestorePage> {
                   ),
                 ),
                 onPressed: () async {
-                  var databasesPath = await getDatabasesPath();
-                  var dbPath = join(databasesPath, 'pos.db');
+                  _showFormatWarningDialog(context, () async {
+                    var databasesPath = await getDatabasesPath();
+                    var dbPath = join(databasesPath, 'pos.db');
 
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles();
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles();
 
-                  if (result != null) {
-                    // Replace the database with the new one
-                    File source = File(result.files.single.path!);
-                    await source.copy(dbPath);
-                    showCustomSnackbar(
-                        context: context,
-                        title: 'Berhasil Restore Data',
-                        message: 'Berhasil restore data dari ${result.files.single.path}',
-                        theme: SnackbarTheme.success);
-                  } else {
+                    if (result != null) {
+                      // Replace the database with the new one
+                      _showConfirmationDialog(context, () async {
+                        // Replace the database with the new one
+                        File source = File(result.files.single.path!);
+                        await source.copy(dbPath);
+                        showCustomSnackbar(
+                            context: context,
+                            title: 'Berhasil Restore Data',
+                            message:
+                                'Berhasil restore data dari ${result.files.single.path}',
+                            theme: SnackbarTheme.success);
+                      });
+                    } else {
+                      showCustomSnackbar(
+                          context: context,
+                          title: 'Gagal Memuat Data',
+                          message: 'Gagal restore data',
+                          theme: SnackbarTheme.error);
+                      // User canceled the picker
+                    }
                     // User canceled the picker
-                  }
-                  // User canceled the picker
+                  });
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),

@@ -71,7 +71,7 @@ class _CardWalletState extends State<CardWallet> {
                           margin: EdgeInsets.only(top: 14),
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Text(
-                            'Rp ${widget.omzet}',
+                            'Rp ${widget.omzet ?? '0'}',
                             style: const TextStyle(
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold,

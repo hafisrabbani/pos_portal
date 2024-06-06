@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pos_portal/utils/colors.dart';
 import 'package:pos_portal/view_model/setting_view_model.dart';
 import 'package:pos_portal/widgets/floating_button.dart';
 import 'package:pos_portal/widgets/input_field.dart';
+import 'package:pos_portal/widgets/snackbar.dart';
 import 'package:pos_portal/widgets/topbar.dart';
 
 class WebHookPage extends StatefulWidget {
@@ -46,25 +46,24 @@ class _WebHookPageState extends State<WebHookPage> {
 
     if (check) {
       await _settingViewModel.setWebHook(inputUrl);
-      showSnackBar(context: context, message: 'Webhook saved successfully', color: MyColors.success);
+      showCustomSnackbar(
+          context: context,
+          title: 'Berhasil Menyimpan',
+          message: 'Webhook berhasil tersimpan',
+          theme: SnackbarTheme.success);
       Navigator.pop(context);
     } else {
-      showSnackBar(context: context, message: 'Failed to connect to the webhook', color: MyColors.error);
+      showCustomSnackbar(
+          context: context,
+          title: 'Gagal Menyimpan',
+          message: 'Gagal terkoneksi dengan webhook',
+          theme: SnackbarTheme.error);
     }
 
     setState(() {
       checkConnection = check;
       isLoading = false;
     });
-  }
-
-  void showSnackBar({required BuildContext context, required String message, required Color color}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: color,
-      ),
-    );
   }
 
   @override
@@ -84,19 +83,19 @@ class _WebHookPageState extends State<WebHookPage> {
               isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InputField(
-                    label: 'Masukkan Webhook',
-                    controller: _webhookController,
-                    hintText: 'https://webhook.com',
-                    isMultiLine: true,
-                    onChanged: (p0) {
-                      setState(() {});
-                    },
-                  ),
-                ],
-              ),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputField(
+                          label: 'Masukkan Webhook',
+                          controller: _webhookController,
+                          hintText: 'https://webhook.com',
+                          isMultiLine: true,
+                          onChanged: (p0) {
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
               const SizedBox(height: 20),
             ],
           ),
