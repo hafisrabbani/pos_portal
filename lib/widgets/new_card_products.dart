@@ -21,7 +21,7 @@ class _NewCardProductsState extends State<NewCardProducts> {
   late bool isBestSeller;
   late int index;
 
-  late final totalTransactions;
+  int totalTransactions = 0;
 
   @override
   void initState() {
