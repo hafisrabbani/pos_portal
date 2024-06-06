@@ -87,6 +87,30 @@ class SettingPage extends StatelessWidget {
               Navigator.pushNamed(context, RoutesName.settingWebHook);
             },
           ),
+          ListTile(
+            title: const Text(
+              'Backup/Restore Data',
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            subtitle: const Text('Simpan dan Pulihkan Data',
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300)),
+            leading: Icon(
+              Icons.folder_copy_outlined,
+              color: MyColors.primary,
+              size: 24,
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, RoutesName.backupRestore);
+            },
+          ),
         ],
       ),
     );

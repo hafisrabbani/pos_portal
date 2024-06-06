@@ -56,6 +56,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           .asMap()
           .entries
           .map((e) => FlSpot(e.key.toDouble(), e.value.toDouble())));
+      isLoading = false;
     });
   }
 
@@ -63,7 +64,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   void initState() {
     super.initState();
     loadStatistik();
-    isLoading = false;
   }
 
   @override

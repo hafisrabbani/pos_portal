@@ -17,4 +17,5 @@ class RoutesName {
   static const String settingStruk = '/setting/struk';
   static const String settingPrinter = '/setting/printer';
   static const String settingWebHook = '/setting/webhook';
+  static const String backupRestore = '/setting/backup-restore';
 }

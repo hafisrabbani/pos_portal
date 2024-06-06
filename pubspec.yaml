@@ -29,6 +29,8 @@ dependencies:
   open_file: ^3.3.2
   fl_chart: ^0.68.0
   introduction_screen: ^3.1.14
+  permission_handler: ^11.3.1
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
