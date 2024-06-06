@@ -1,6 +1,7 @@
-class RoutesName{
+class RoutesName {
   static const String ROOT = '/';
   static const String home = '/home';
+  static const String onboarding = '/onBoarding';
   static const String product = '/product';
   static const String productAction = '/product/action';
   static const String transaction = '/transaction';
@@ -15,4 +16,6 @@ class RoutesName{
   static const String setting = '/setting';
   static const String settingStruk = '/setting/struk';
   static const String settingPrinter = '/setting/printer';
+  static const String settingWebHook = '/setting/webhook';
+  static const String backupRestore = '/setting/backup-restore';
 }

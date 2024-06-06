@@ -107,10 +107,7 @@ class _ProductPageState extends State<ProductPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(
-        context: context,
-        title: 'Produk',
-      ),
+      appBar: topBar(context: context, title: 'Produk', isCanBack: false),
       body: Column(
         children: [
           Row(

@@ -8,6 +8,7 @@ import 'package:pos_portal/view_model/transaction_view_model.dart';
 import 'package:pos_portal/widgets/change_widget.dart';
 import 'package:pos_portal/widgets/floating_button.dart';
 import 'package:pos_portal/widgets/input_field.dart';
+import 'package:pos_portal/widgets/snackbar.dart';
 import 'package:pos_portal/widgets/table_row_widget.dart';
 import 'package:pos_portal/widgets/topbar.dart';
 
@@ -44,41 +45,44 @@ class _CashPaymentState extends State<CashPayment> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                Table(
-                  border: TableBorder.all(
-                      color: MyColors.primary,
-                      borderRadius: BorderRadius.circular(5)),
-                  columnWidths: const {
-                    0: FixedColumnWidth(35.0),
-                    1: FlexColumnWidth(),
-                    2: FixedColumnWidth(40.0),
-                    3: FixedColumnWidth(100.0),
-                  },
-                  children: [
-                    TableRow(
-                      decoration: BoxDecoration(
-                          color: MyColors.tertiary,
-                          borderRadius: BorderRadius.circular(5)),
-                      children: [
-                        tableRowItem(title: 'No', isHeader: true),
-                        tableRowItem(title: 'Nama', isHeader: true),
-                        tableRowItem(title: 'Qty', isHeader: true),
-                        tableRowItem(title: 'Harga', isHeader: true),
-                      ],
-                    ),
-                    ...selectedItems.asMap().entries.map((entry) {
-                      int index = entry.key;
-                      var item = entry.value;
-                      return TableRow(
+                Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  child: Table(
+                    border: TableBorder.all(
+                        color: MyColors.primary,
+                        borderRadius: BorderRadius.circular(5)),
+                    columnWidths: const {
+                      0: FixedColumnWidth(35.0),
+                      1: FlexColumnWidth(),
+                      2: FixedColumnWidth(40.0),
+                      3: FixedColumnWidth(100.0),
+                    },
+                    children: [
+                      TableRow(
+                        decoration: BoxDecoration(
+                            color: MyColors.tertiary,
+                            borderRadius: BorderRadius.circular(5)),
                         children: [
-                          tableRowItem(title: (index + 1).toString()),
-                          tableRowItem(title: item['name']),
-                          tableRowItem(title: item['quantity'].toString()),
-                          tableRowItem(title: 'Rp ${item['price']}'),
+                          tableRowItem(title: 'No', isHeader: true),
+                          tableRowItem(title: 'Nama', isHeader: true),
+                          tableRowItem(title: 'Qty', isHeader: true),
+                          tableRowItem(title: 'Harga', isHeader: true),
                         ],
-                      );
-                    }).toList(),
-                  ],
+                      ),
+                      ...selectedItems.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        var item = entry.value;
+                        return TableRow(
+                          children: [
+                            tableRowItem(title: (index + 1).toString()),
+                            tableRowItem(title: item['name']),
+                            tableRowItem(title: item['quantity'].toString()),
+                            tableRowItem(title: 'Rp ${item['price']}'),
+                          ],
+                        );
+                      }).toList(),
+                    ],
+                  ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(bottom: 36),
@@ -114,27 +118,46 @@ class _CashPaymentState extends State<CashPayment> {
           title: 'Bayar',
           heroTag: 'toMetodeBayar',
           isFilled: true,
-          actionPressed: () async {
-            int? item = await transactionViewModel.createTrx(
-              Transaction(
-                NominalPayment: uangDiterima!,
-                TotalPayment: totalTransaksi,
-                Change: kembalian!,
-                status: TransactionStatusType.paid,
-              ),
-              selectedItems
-                  .map<TransactionItem>(
-                      (Map<String, dynamic> e) => TransactionItem(
-                            ProductId: e['productId'],
-                            Quantity: e['quantity'],
-                            Price: e['price'].toInt(),
-                          ))
-                  .toList(),
-            );
-            Navigator.pushNamed(context, RoutesName.successPayment, arguments: {
-              'trxId': item,
-            });
-          },
+          actionPressed: (uangDiterima! >= totalTransaksi)
+              ? () async {
+                  int? item = await transactionViewModel.createTrx(
+                    Transaction(
+                      NominalPayment: uangDiterima!,
+                      TotalPayment: totalTransaksi,
+                      Change: kembalian!,
+                      status: TransactionStatusType.paid,
+                    ),
+                    selectedItems
+                        .map<TransactionItem>(
+                            (Map<String, dynamic> e) => TransactionItem(
+                                  ProductId: e['productId'],
+                                  Quantity: e['quantity'],
+                                  Price: e['price'].toInt(),
+                                ))
+                        .toList(),
+                  );
+                  Navigator.pushNamed(context, RoutesName.successPayment,
+                      arguments: {
+                        'trxId': item,
+                      });
+                }
+              : () {
+                  (uangDiterimaController.text.isEmpty)
+                      ? showCustomSnackbar(
+                          context: context,
+                          title: 'Isi inputan uang diterima',
+                          message:
+                              'Masukkan uang yang diterima terlebih dahulu',
+                          theme: SnackbarTheme.error,
+                        )
+                      : showCustomSnackbar(
+                          context: context,
+                          title: 'Uang Diterima Kurang',
+                          message:
+                              'Uang diterima harus lebih besar atau sama dengan total transaksi',
+                          theme: SnackbarTheme.error,
+                        );
+                },
           isDisabled: !(uangDiterima! >= totalTransaksi),
           // isDisabled: !(uangDiterima! >= widget.totalTransaksi),
         ),

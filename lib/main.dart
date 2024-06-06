@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos_portal/routes/route_name.dart';
 import 'package:pos_portal/routes/routes.dart';
+import 'package:pos_portal/view/intro_screen/onboarding.dart';
 import 'package:pos_portal/view_model/cart_provider.dart';
 import 'package:pos_portal/view_model/cart_view_model.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class MainApp extends StatelessWidget {
       title: 'Pos Portal',
       initialRoute: RoutesName.ROOT,
       onGenerateRoute: Routes.generateRoute,
+      // home: OnBoardingPage(),
     );
   }
 }

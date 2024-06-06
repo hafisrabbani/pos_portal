@@ -46,7 +46,7 @@ class _CopyIdClipboardState extends State<CopyIdClipboard> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               child: Text(
-                widget.transactionId.toString(),
+                'ID Transaksi: ${widget.transactionId.toString()}',
                 style: const TextStyle(
                     fontSize: 16,
                     fontFamily: 'Montserrat',

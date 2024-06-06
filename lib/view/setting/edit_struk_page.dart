@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos_portal/view_model/setting_view_model.dart';
 import 'package:pos_portal/widgets/floating_button.dart';
+import 'package:pos_portal/widgets/input_field.dart';
 import 'package:pos_portal/widgets/topbar.dart';
 import '../../widgets/customTextField.dart';
 
@@ -19,8 +20,7 @@ class _EditStrukState extends State<EditStruk> {
   void loadStruk() async {
     final headerStruk = await _settingViewModel.getStrukHeader();
     final footerStruk = await _settingViewModel.getStrukFooter();
-    print('headerStruk: $headerStruk');
-    print('footerStruk: $footerStruk');
+
     setState(() {
       headerController.text = headerStruk;
       footerController.text = footerStruk;
@@ -41,7 +41,7 @@ class _EditStrukState extends State<EditStruk> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(context: context, title: 'Edit Struk'),
+      appBar: topBar(context: context, title: 'Edit Struk', isCanBack: true),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -52,60 +52,52 @@ class _EditStrukState extends State<EditStruk> {
                 height: 32,
               ),
               Column(
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Masukkan Header',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  CustomTextField(
+                  InputField(
+                    label: 'Masukkan Header Struk',
                     controller: headerController,
-                    labelText: 'Isikan Header Disini',
-                    hintText: 'Isikan Header Disini',
+                    hintText: 'Isikan header disini',
+                    isMultiLine: true,
+                    onChanged: (p0) {
+                      setState(() {
+                        print(
+                            "foote contol : ${footerController.text} header contol : ${headerController.text}");
+                      });
+                    },
+                  ),
+                  InputField(
+                    label: 'Masukkan Footer Struk',
+                    controller: footerController,
+                    hintText: 'Isikan footer disini',
+                    isMultiLine: true,
+                    onChanged: (p0) {
+                      setState(() {
+                        print(
+                            "foote contol : ${footerController.text} header contol : ${headerController.text}");
+                      });
+                    },
                   ),
                 ],
               ),
               const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Masukkan Footer',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  CustomTextField(
-                    controller: footerController,
-                    labelText: 'Isikan Footer Disini',
-                    hintText: 'Isikan Footer Disini',
-                  ),
-                ],
-              ),
             ],
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton:  FloatingButtonDefault(
-        heroTag: "product",
-        title: 'Simpan',
-        actionPressed: () {
-          saveStruk();
-          Navigator.pop(context);
-        },
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: FloatingButtonDefault(
+          isFilled: true,
+          isDisabled:
+              (headerController.text.isEmpty || footerController.text.isEmpty),
+          heroTag: "product",
+          title: 'Simpan',
+          actionPressed: () {
+            saveStruk();
+            Navigator.pop(context);
+          },
+        ),
       ),
     );
   }

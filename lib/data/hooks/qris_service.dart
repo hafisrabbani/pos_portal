@@ -1,13 +1,36 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:pos_portal/model/api/resp_transaction.dart';
 import 'package:pos_portal/model/api/transaction.dart';
+import 'package:pos_portal/model/api/webhook.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class QrisService {
-  final Uri url = Uri.parse('https://e56e-103-24-56-34.ngrok-free.app'
-      '/api/v1');
+  static const String _webHookKey = 'webhook';
+  Uri? url;
+  SharedPreferences? _prefs;
+  final Completer<void> _initCompleter = Completer<void>();
+
+  QrisService(){
+    _init();
+  }
+
+  Future<void> _init() async {
+    _prefs = await SharedPreferences.getInstance();
+    final String? urlString = _prefs?.getString(_webHookKey);
+    if (urlString != null) {
+      url = Uri.parse(urlString);
+    }
+    _initCompleter.complete();
+  }
 
   Future<RespPayment> createQris(RequestTransaction data) async {
+    await _initCompleter.future;  // Ensure _init completes
+    if (url == null) {
+      throw Exception('Webhook URL is not set');
+    }
+
     final response = await http.post(
       Uri.parse('$url/payment/create-transaction'),
       headers: <String, String>{
@@ -34,6 +57,27 @@ class QrisService {
       }
     } else {
       throw Exception('Failed to create transaction');
+    }
+  }
+
+  Future<Webhook> getWebhook(int orderId) async {
+    await _initCompleter.future;
+    if (url == null) {
+      throw Exception('Webhook URL is not set');
+    }
+
+    final response = await http.get(
+      Uri.parse('$url/payment/get-status-payment?order_id=$orderId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print('query webhook: ${url}/payment/get-status-payment?order_id=$orderId');
+    print('result webhooksss: ${response.body}');
+    if (response.statusCode == 200) {
+      return Webhook.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to get webhook');
     }
   }
 }

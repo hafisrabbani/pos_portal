@@ -1,11 +1,9 @@
-import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:pos_portal/routes/route_name.dart';
-// import 'package:pos_portal/pages/home/new_transaction_page.dart';
-// import 'package:pos_portal/pages/home/stats_page.dart';
+import 'package:pos_portal/utils/colors.dart';
+import 'package:pos_portal/view_model/homepage_view_model.dart';
 import 'package:pos_portal/widgets/floating_button.dart';
 import 'package:pos_portal/widgets/card_info.dart';
 import 'package:pos_portal/widgets/card_menu.dart';
@@ -21,42 +19,72 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final HomepageViewModel homepageViewModel = HomepageViewModel();
+  List<int> _infoProduct = [0, 0, 0];
+  String _omzet = '0';
+  int _selectedSegment = 1;
 
-  List<int> _infoProduct = [];
   @override
   void initState() {
     super.initState();
     _loadInfoProduct();
+    getOmzet();
+  }
+
+  @override
+  void dispose() {
+    homepageViewModel.dispose();
+    super.dispose();
+  }
+
+  void getOmzet() async {
+    final omzet = await homepageViewModel.getOmsetToday();
+    if (mounted) {
+      setState(() {
+        _omzet = omzet;
+      });
+    }
   }
 
   void _loadInfoProduct() async {
-    // _infoProduct = await _productController.getInfoProduct();
+    final infoProduct = await homepageViewModel.getTransactionCount();
+    if (mounted) {
+      setState(() {
+        _infoProduct = infoProduct;
+      });
+    }
   }
 
+  void _onSegmentChanged(int value) {
+    setState(() {
+      _selectedSegment = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowMaterialGrid: false,
       home: Scaffold(
-        body:SafeArea(
+        body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CardWallet(),
-                CardInfo(),
-                CardMenu(infoProduct: [1,1,1]),
-                SegmentedControl(),
+                CardWallet(omzet: _omzet),
+                // CardInfo(),
+                CardMenu(infoProduct: _infoProduct),
+                SegmentedControl(onValueChanged: _onSegmentChanged),
                 GestureDetector(
-                  onTap: () {
-                    // PersistentNavBarNavigator.pushNewScreen(
-                    //   context,
-                    //   screen: StatsPage(),
-                    //   withNavBar: true,
-                    //   pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                    // );
-                  },
-                  child: LineChart(),
+                  onTap: () {},
+                  child: SingleChildScrollView(
+                    child: LineChartWidget(
+                      selectedSegment: _selectedSegment,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 70,
                 ),
               ],
             ),
@@ -65,15 +93,8 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingButtonDefault(
           heroTag: "home",
           title: 'Tambah Transaksi',
-          // actionPressed: () => PersistentNavBarNavigator.pushNewScreen(
-          //   context,
-          //   screen: NewTransactionPage(),
-          //   withNavBar: false,
-          //   pageTransitionAnimation: PageTransitionAnimation.cupertino,
-          // ),
-          actionPressed: () => {
-            Navigator.pushNamed(context, RoutesName.newTransaction)
-          },
+          actionPressed: () =>
+          {Navigator.pushNamed(context, RoutesName.newTransaction)},
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),

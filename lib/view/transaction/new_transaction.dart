@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:pos_portal/routes/route_name.dart';
 import 'package:pos_portal/utils/colors.dart';
 import 'package:pos_portal/utils/helpers.dart';
@@ -20,7 +19,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
   List<Map<String, dynamic>> selectedItems = [];
   int totalTransaksi = 0;
 
-  void updateSelectedItemsCount(List<Map<String, dynamic>> items, double total) {
+  void updateSelectedItemsCount(
+      List<Map<String, dynamic>> items, double total) {
     setState(() {
       selectedItems = items;
       totalTransaksi = total.toInt();
@@ -36,16 +36,19 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
         title: 'Transaksi Baru',
         isCanBack: true,
       ),
-      body: Column(
-        children: [
-          SearchField(
-            controller: searchController,
-            isAdaBatal: false,
-          ),
-          CardList(
-            onSelectionChanged: updateSelectedItemsCount,
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            SearchField(
+              controller: searchController,
+              isAdaBatal: false,
+            ),
+            CardList(
+              onSelectionChanged: updateSelectedItemsCount,
+            ),
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: CartDetail(
@@ -155,19 +158,21 @@ class CartDetail extends StatelessWidget {
               ),
               onPressed: selectedItemsCount > 0
                   ? () {
-                Navigator.pushNamed(context, RoutesName.transactionConfirm, arguments: {
-                  'totalTransaksi': totalTransaksi,
-                  'selectedItems': selectedItems,
-                });
-              }
+                      Navigator.pushNamed(
+                          context, RoutesName.transactionConfirm,
+                          arguments: {
+                            'totalTransaksi': totalTransaksi,
+                            'selectedItems': selectedItems,
+                          });
+                    }
                   : () {
-                showCustomSnackbar(
-                  context: context,
-                  message: 'Pilih barang terlebih dahulu',
-                  title: 'Belum ada produk yang dipilih',
-                  theme: SnackbarTheme.error,
-                );
-              },
+                      showCustomSnackbar(
+                        context: context,
+                        message: 'Pilih barang terlebih dahulu',
+                        title: 'Belum ada produk yang dipilih',
+                        theme: SnackbarTheme.error,
+                      );
+                    },
               child: const Text(
                 'Bayar',
                 style: TextStyle(

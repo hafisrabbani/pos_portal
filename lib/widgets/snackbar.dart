@@ -24,17 +24,17 @@ void showCustomSnackbar({
     case SnackbarTheme.error:
       bgColor = MyColors.bgError;
       iconColor = MyColors.error;
-      icon = Icon(Icons.error, color: iconColor);
+      icon = Icon(Icons.priority_high_rounded, size: 12, color: bgColor);
       break;
     case SnackbarTheme.success:
       bgColor = MyColors.bgSuccess;
       iconColor = MyColors.success;
-      icon = Icon(Icons.check, color: iconColor);
+      icon = Icon(Icons.check, size: 12, color: bgColor);
       break;
     case SnackbarTheme.warning:
       bgColor = MyColors.bgWarning;
       iconColor = MyColors.warning;
-      icon = Icon(Icons.error, color: iconColor);
+      icon = Icon(Icons.close, size: 12, color: bgColor);
       break;
   }
 
@@ -52,60 +52,72 @@ void showCustomSnackbar({
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: icon,
+              child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: iconColor,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: icon),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                    ),
                   ),
                 ),
-                Text(
-                  message,
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 15,
-                    color: Colors.black,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Text(
+                    message,
+                    style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 13,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
             ),
           ],
         ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            style: ButtonStyle(
-              side: MaterialStateProperty.all(
-                  BorderSide(color: MyColors.primary)),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: MyColors.primary),
-                ),
-              ),
-            ),
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              _isSnackbarVisible = false;
-            },
-            child: Text(
-              'Tutup',
-              style: TextStyle(
-                color: MyColors.primary,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
-              ),
-            ),
-          ),
-        ),
+        // Align(
+        //   alignment: Alignment.centerRight,
+        //   child: TextButton(
+        //     style: ButtonStyle(
+        //       side: MaterialStateProperty.all(
+        //           BorderSide(color: MyColors.primary)),
+        //       shape: MaterialStateProperty.all(
+        //         RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(12),
+        //           side: BorderSide(color: MyColors.primary),
+        //         ),
+        //       ),
+        //     ),
+        //     onPressed: () {
+        //       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        //       _isSnackbarVisible = false;
+        //     },
+        //     child: Text(
+        //       'Tutup',
+        //       style: TextStyle(
+        //         color: MyColors.primary,
+        //         fontFamily: 'Montserrat',
+        //         fontWeight: FontWeight.w600,
+        //         fontSize: 15,
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     ),
     backgroundColor: bgColor,

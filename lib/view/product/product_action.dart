@@ -44,7 +44,7 @@ class _ProductActionState extends State<ProductAction> {
         hargaProdukController.text = product.price.toString();
         stokProdukController.text = product.stock.toString();
         hargaProduk = product.price.toInt();
-        stokProduk =  product.stock;
+        stokProduk = product.stock;
         _character =
             product.stockType == 0 ? StockType.unlimited : StockType.limited;
       });
@@ -79,6 +79,9 @@ class _ProductActionState extends State<ProductAction> {
                     label: 'Nama Produk',
                     isWajibIsi: true,
                     hintText: 'Masukkan Nama Produk',
+                    onChanged: (p0) {
+                      setState(() {});
+                    },
                   ),
                   const SizedBox(height: 25),
                   InputField(
@@ -91,6 +94,9 @@ class _ProductActionState extends State<ProductAction> {
                       setState(() {
                         hargaProduk = value;
                       });
+                    },
+                    onChanged: (p0) {
+                      setState(() {});
                     },
                   ),
                 ],
@@ -113,9 +119,10 @@ class _ProductActionState extends State<ProductAction> {
                     title: const Text(
                       'Tidak Terbatas',
                       style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                        fontFamily: 'Montserrat',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     value: StockType.unlimited,
                     groupValue: _character,
@@ -132,9 +139,10 @@ class _ProductActionState extends State<ProductAction> {
                     title: const Text(
                       'Terbatas',
                       style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                        fontFamily: 'Montserrat',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     value: StockType.limited,
                     groupValue: _character,
@@ -161,6 +169,9 @@ class _ProductActionState extends State<ProductAction> {
                             setState(() {
                               stokProduk = value;
                             });
+                          },
+                          onChanged: (p0) {
+                            setState(() {});
                           },
                         ),
                       ),
@@ -198,7 +209,8 @@ class _ProductActionState extends State<ProductAction> {
             }
           },
           isFilled: true,
-          isDisabled: !isFilled,
+          isDisabled: (namaProdukController.text.isEmpty ||
+              hargaProdukController.text.isEmpty),
         ),
       ),
     );

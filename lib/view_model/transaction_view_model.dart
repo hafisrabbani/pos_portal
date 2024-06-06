@@ -3,6 +3,7 @@ import 'package:pos_portal/data/query/transaction_query.dart';
 import 'package:pos_portal/data/type/transaction_status_type.dart';
 import 'package:pos_portal/model/api/resp_transaction.dart';
 import 'package:pos_portal/model/api/transaction.dart';
+import 'package:pos_portal/model/api/webhook.dart';
 import 'package:pos_portal/model/transaction.dart';
 import 'package:pos_portal/model/transaction_detail.dart';
 import 'package:pos_portal/model/transaction_item.dart';
@@ -41,5 +42,11 @@ class TransactionViewModel{
   Future<RespPayment> createPaymentQris(RequestTransaction data){
     final QrisService qrisService = QrisService();
     return qrisService.createQris(data);
+  }
+
+  Future<String?> getWebhookUrl(int id) async {
+    final QrisService qrisService = QrisService();
+    Webhook webhook = await qrisService.getWebhook(id);
+    return webhook.webhookUrl;
   }
 }
