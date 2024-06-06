@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pos_portal/utils/colors.dart';
 import '../model/product.dart';
 import '../routes/route_name.dart';
@@ -22,6 +23,56 @@ class _CardProductsState extends State<CardProducts> {
     super.initState();
     product = widget.product;
     productViewModel = ProductViewModel();
+  }
+
+  Widget _trailingWidget(int stock) {
+    if (product.stockType == 0) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            'assets/svg/icon_cart.svg',
+            color: MyColors.success,
+            height: 25,
+            width: 25,
+          ),
+          const SizedBox(width: 5),
+          const Text(
+            'Stok tidak terbatas',
+            style: TextStyle(
+              color: MyColors.success,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w400,
+              fontSize: 10,
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            'assets/svg/icon_cart.svg',
+            color: getColorByStock(stock),
+            height: 25,
+            width: 25,
+          ),
+          const SizedBox(width: 5),
+          Text(
+            stock.toString(),
+            style: TextStyle(
+              color: getColorByStock(stock),
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w400,
+              fontSize: 10,
+            ),
+          ),
+        ],
+      );
+    }
   }
 
   @override
@@ -57,34 +108,7 @@ class _CardProductsState extends State<CardProducts> {
                 color: MyColors.primary,
               ),
             ),
-            trailing: SizedBox(
-              width: 100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'Stock : ',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: getColorByStock(
-                          product.stockType == 0 ? null : product.stock),
-                    ),
-                  ),
-                  Text(
-                    (product.stockType == 0) ? 'ထ' : product.stock.toString(),
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: getColorByStock(
-                          product.stockType == 0 ? null : product.stock),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            trailing: _trailingWidget(product.stockType),
           ),
         ),
       ),
