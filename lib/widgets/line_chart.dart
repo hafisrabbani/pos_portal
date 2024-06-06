@@ -49,6 +49,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     var data = await homepageViewModel.getStatisticTrx(
         widget.selectedSegment == 1 ? ChartType.weekly : ChartType.monthly);
 
+    if(!mounted) return;
+
     setState(() {
       originalData = data;
       maxData = getMaxValue(data);
